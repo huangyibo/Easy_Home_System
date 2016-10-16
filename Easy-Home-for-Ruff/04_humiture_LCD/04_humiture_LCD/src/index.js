@@ -33,8 +33,9 @@ $.ready(function (error) {
 
     client.on('message', function (topicc, message) {
         topic = topicc.toString();
-        if (topic == "light")
+        if (topicc.toString() == "window") {
             settable = true;
+        }
         msg = message.toString();
         console.log(topic);
         console.log(msg);
