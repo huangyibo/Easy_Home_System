@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Test Ruff 1.5.0 Manual &amp; Documentation</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic">
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="assets/sh.css">
+  <link rel="canonical" href="https://ruff.io/api/test.html">
+</head>
+<body class="alt apidoc" id="api-section-test">
+  <div id="content" class="clearfix">
+    <div id="column1" data-id="test" class="interior">
+      <header>
+        <h1>Ruff 1.5.0 Documentation</h1>
+        <hr>
+      </header>
+
+      <div id="toc">
+        <h2>Table of Contents</h2>
+        <ul>
+<li><a href="#test_test">Test</a><ul>
+<li><a href="#test_test_run_moduleexports">test.run(moduleExports)</a></li>
+</ul>
+</li>
+</ul>
+
+      </div>
+
+      <div id="apicontent">
+        <h1 id="test-span-a-class-mark-href-test_test-id-test_test-a-span-">Test<span><a class="mark" href="#test_test" id="test_test">#</a></span></h1>
+<p>This module is used to run as test framework. It can be accessed with
+<code>require(&#39;test&#39;)</code>.</p>
+<p>Automated tests are an important part of software development today. Providing a standard test library will help encourage more people to write more tests. Additionally, the API will likely be written in the form of tests.</p>
+<p>You can simply declare tests with module&#39;s exports and test name should start with &#39;test&#39; but not equal to &#39;test&#39;.</p>
+<pre><code class="lang-javascript">exports[&quot;test behaviour X&quot;] = function() {
+    behaviour.X()
+};
+</code></pre>
+<p>or</p>
+<pre><code class="lang-javascript">exports.testPatience = function () {
+    require(&#39;os&#39;).sleep(1000);
+};
+</code></pre>
+<p>Sub-objects with names that start with but are not equal to &quot;test&quot; will be run as sub-tests.</p>
+<pre><code class="lang-javascript">exports.testSubTest = require(&quot;./sub-test&quot;);
+</code></pre>
+<p>And then you can run the tests with <code>run</code> method.</p>
+<pre><code class="lang-javascript">require(&quot;test&quot;).run(exports);
+</code></pre>
+<h2 id="test-run-moduleexports-span-a-class-mark-href-test_test_run_moduleexports-id-test_test_run_moduleexports-a-span-">test.run(moduleExports)<span><a class="mark" href="#test_test_run_moduleexports" id="test_test_run_moduleexports">#</a></span></h2>
+<p>Run all tests in module&#39;s exports.</p>
+
+      </div>
+    </div>
+  </div>
+  <div id="footer">
+  </div>
+
+  <script src="assets/sh_main.js"></script>
+  <script src="assets/sh_javascript.min.js"></script>
+  <script>highlight(undefined, undefined, 'pre');</script>
+</body>
+</html>
+

@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Console Ruff 1.5.0 Manual &amp; Documentation</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic">
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="assets/sh.css">
+  <link rel="canonical" href="https://ruff.io/api/console.html">
+</head>
+<body class="alt apidoc" id="api-section-console">
+  <div id="content" class="clearfix">
+    <div id="column1" data-id="console" class="interior">
+      <header>
+        <h1>Ruff 1.5.0 Documentation</h1>
+        <hr>
+      </header>
+
+      <div id="toc">
+        <h2>Table of Contents</h2>
+        <ul>
+<li><a href="#console_console">Console</a><ul>
+<li><a href="#console_console_1">console</a><ul>
+<li><a href="#console_console_log_data">console.log([data][, ...])</a></li>
+<li><a href="#console_console_info_data">console.info([data][, ...])</a></li>
+<li><a href="#console_console_error_data">console.error([data][, ...])</a></li>
+<li><a href="#console_console_warn_data">console.warn([data][, ...])</a></li>
+<li><a href="#console_console_dir_obj_options">console.dir(obj[, options])</a></li>
+<li><a href="#console_console_time_label">console.time(label)</a></li>
+<li><a href="#console_console_timeend_label">console.timeEnd(label)</a></li>
+<li><a href="#console_console_trace_message">console.trace(message[, ...])</a></li>
+<li><a href="#console_console_assert_value_message">console.assert(value[, message][, ...])</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+      </div>
+
+      <div id="apicontent">
+        <h1 id="console-span-a-class-mark-href-console_console-id-console_console-a-span-">Console<span><a class="mark" href="#console_console" id="console_console">#</a></span></h1>
+<p>The module exports a <code>console</code> object, whose output is sent to stdout or stderr.</p>
+<p>For ease of use, <code>console</code> is defined as a global object and can be used
+directly without <code>require</code>.</p>
+<h2 id="console-span-a-class-mark-href-console_console_1-id-console_console_1-a-span-">console<span><a class="mark" href="#console_console_1" id="console_console_1">#</a></span></h2>
+<div class="signature"><ul>
+<li><span class="type">Object</span></li>
+</div></ul>
+<p>For printing to stdout and stderr. Similar to the console object functions
+provided by most web browsers, here the output is sent to stdout or stderr.</p>
+<p>The console functions are synchronous when the destination is a terminal or
+a file (to avoid lost messages in case of premature exit) and asynchronous
+when it&#39;s a pipe (to avoid blocking for long periods of time).</p>
+<p>In daily use, the blocking/non-blocking dichotomy is not something you
+should worry about unless you log huge amounts of data.</p>
+<h3 id="console-log-data-span-a-class-mark-href-console_console_log_data-id-console_console_log_data-a-span-">console.log([data][, ...])<span><a class="mark" href="#console_console_log_data" id="console_console_log_data">#</a></span></h3>
+<p>Prints to stdout with newline. This function can take multiple arguments in a
+<code>printf()</code>-like way. Example:</p>
+<pre><code>var count = 5;
+console.log(&#39;count: %d&#39;, count);
+// prints &#39;count: 5&#39;
+</code></pre><p>If formatting elements are not found in the first string then <code>util.inspect</code>
+is used on each argument.  See [util.format()][] for more information.</p>
+<h3 id="console-info-data-span-a-class-mark-href-console_console_info_data-id-console_console_info_data-a-span-">console.info([data][, ...])<span><a class="mark" href="#console_console_info_data" id="console_console_info_data">#</a></span></h3>
+<p>Same as <code>console.log</code>.</p>
+<h3 id="console-error-data-span-a-class-mark-href-console_console_error_data-id-console_console_error_data-a-span-">console.error([data][, ...])<span><a class="mark" href="#console_console_error_data" id="console_console_error_data">#</a></span></h3>
+<p>Same as <code>console.log</code> but prints to stderr.</p>
+<h3 id="console-warn-data-span-a-class-mark-href-console_console_warn_data-id-console_console_warn_data-a-span-">console.warn([data][, ...])<span><a class="mark" href="#console_console_warn_data" id="console_console_warn_data">#</a></span></h3>
+<p>Same as <code>console.error</code>.</p>
+<h3 id="console-dir-obj-options-span-a-class-mark-href-console_console_dir_obj_options-id-console_console_dir_obj_options-a-span-">console.dir(obj[, options])<span><a class="mark" href="#console_console_dir_obj_options" id="console_console_dir_obj_options">#</a></span></h3>
+<p>Uses <code>util.inspect</code> on <code>obj</code> and prints resulting string to stdout. This function
+bypasses any custom <code>inspect()</code> function on <code>obj</code>. An optional <em>options</em> object
+may be passed that alters certain aspects of the formatted string:</p>
+<ul>
+<li><p><code>showHidden</code> - if <code>true</code> then the object&#39;s non-enumerable and symbol
+properties will be shown too. Defaults to <code>false</code>.</p>
+</li>
+<li><p><code>depth</code> - tells <code>inspect</code> how many times to recurse while formatting the
+object. This is useful for inspecting large complicated objects. Defaults to
+<code>2</code>. To make it recurse indefinitely pass <code>null</code>.</p>
+</li>
+<li><p><code>colors</code> - if <code>true</code>, then the output will be styled with ANSI color codes.
+Defaults to <code>false</code>. Colors are customizable, see [util.inspect()] for more information.</p>
+</li>
+</ul>
+<h3 id="console-time-label-span-a-class-mark-href-console_console_time_label-id-console_console_time_label-a-span-">console.time(label)<span><a class="mark" href="#console_console_time_label" id="console_console_time_label">#</a></span></h3>
+<p>Used to calculate the duration of a specific operation. To start a timer, call
+the <code>console.time()</code> method, giving it a name as only parameter. To stop the
+timer, and to get the elapsed time in milliseconds, just call the
+<a href="#console_console_timeend_label"><code>console.timeEnd()</code></a> method, again passing the
+timer&#39;s name as the parameter.</p>
+<h3 id="console-timeend-label-span-a-class-mark-href-console_console_timeend_label-id-console_console_timeend_label-a-span-">console.timeEnd(label)<span><a class="mark" href="#console_console_timeend_label" id="console_console_timeend_label">#</a></span></h3>
+<p>Stops a timer that was previously started by calling
+<a href="#console_console_time_label"><code>console.time()</code></a> and print the result to the
+console.</p>
+<p>Example:</p>
+<pre><code>console.time(&#39;100-elements&#39;);
+for (var i = 0; i &lt; 100; i++) {
+  ;
+}
+console.timeEnd(&#39;100-elements&#39;);
+// prints 100-elements: 262ms
+</code></pre><h3 id="console-trace-message-span-a-class-mark-href-console_console_trace_message-id-console_console_trace_message-a-span-">console.trace(message[, ...])<span><a class="mark" href="#console_console_trace_message" id="console_console_trace_message">#</a></span></h3>
+<p>Print to stderr <code>&#39;Trace :&#39;</code>, followed by the formatted message and stack trace
+to the current position.</p>
+<h3 id="console-assert-value-message-span-a-class-mark-href-console_console_assert_value_message-id-console_console_assert_value_message-a-span-">console.assert(value[, message][, ...])<span><a class="mark" href="#console_console_assert_value_message" id="console_console_assert_value_message">#</a></span></h3>
+<p>Similar to [assert.ok()][], but the error message is formatted as
+<code>util.format(message...)</code>.</p>
+
+      </div>
+    </div>
+  </div>
+  <div id="footer">
+  </div>
+
+  <script src="assets/sh_main.js"></script>
+  <script src="assets/sh_javascript.min.js"></script>
+  <script>highlight(undefined, undefined, 'pre');</script>
+</body>
+</html>
+

@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>I²C Ruff 1.5.0 Manual &amp; Documentation</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic">
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="assets/sh.css">
+  <link rel="canonical" href="https://ruff.io/api/i2c.html">
+</head>
+<body class="alt apidoc" id="api-section-i2c">
+  <div id="content" class="clearfix">
+    <div id="column1" data-id="i2c" class="interior">
+      <header>
+        <h1>Ruff 1.5.0 Documentation</h1>
+        <hr>
+      </header>
+
+      <div id="toc">
+        <h2>Table of Contents</h2>
+        <ul>
+<li><a href="#i2c_i_c">I²C</a><ul>
+<li><a href="#i2c_using_a_i_c_interface_in_driver">Using a I²C Interface in Driver</a><ul>
+<li><a href="#i2c_configuring_driver_json">Configuring <code>driver.json</code></a><ul>
+<li><a href="#i2c_arguments">Arguments</a><ul>
+<li><a href="#i2c_address"><code>address</code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#i2c_writing_a_driver">Writing a Driver</a></li>
+<li><a href="#i2c_api_references">API References</a><ul>
+<li><a href="#i2c_methods">Methods</a><ul>
+<li><a href="#i2c_readbyte_command_callback"><code>readByte(command, callback)</code></a></li>
+<li><a href="#i2c_readword_command_callback"><code>readWord(command, callback)</code></a></li>
+<li><a href="#i2c_readbytes_command_length_callback"><code>readBytes(command, length, callback)</code></a></li>
+<li><a href="#i2c_writebyte_command_value_callback"><code>writeByte(command, value[, callback])</code></a></li>
+<li><a href="#i2c_writeword_command_value_callback"><code>writeWord(command, value[, callback])</code></a></li>
+<li><a href="#i2c_writebytes_command_values_callback"><code>writeBytes(command, values[, callback])</code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+      </div>
+
+      <div id="apicontent">
+        <h1 id="i-c-span-a-class-mark-href-i2c_i_c-id-i2c_i_c-a-span-">I²C<span><a class="mark" href="#i2c_i_c" id="i2c_i_c">#</a></span></h1>
+<p>I²C (Inter-Integrated Circuit), pronounced I-squared-C, is a multi-master, multi-slave, single-ended, serial computer bus invented by Philips Semiconductor (now NXP Semiconductors).</p>
+<h2 id="using-a-i-c-interface-in-driver-span-a-class-mark-href-i2c_using_a_i_c_interface_in_driver-id-i2c_using_a_i_c_interface_in_driver-a-span-">Using a I²C Interface in Driver<span><a class="mark" href="#i2c_using_a_i_c_interface_in_driver" id="i2c_using_a_i_c_interface_in_driver">#</a></span></h2>
+<h3 id="configuring-driver-json-span-a-class-mark-href-i2c_configuring_driver_json-id-i2c_configuring_driver_json-a-span-">Configuring <code>driver.json</code><span><a class="mark" href="#i2c_configuring_driver_json" id="i2c_configuring_driver_json">#</a></span></h3>
+<p>To use a I²C interface in a driver, you need to have an input with type <code>&quot;i2c&quot;</code> in the <code>driver.json</code>:</p>
+<pre><code class="lang-json">{
+    &quot;models&quot;: [],
+    &quot;inputs&quot;: {
+        &quot;i2c&quot;: {
+            &quot;type&quot;: &quot;i2c&quot;,
+            &quot;args&quot;: {
+                &quot;address&quot;: -1
+            }
+        }
+    }
+}
+</code></pre>
+<p>In the JSON configuration above, the first <code>&quot;i2c&quot;</code> is just the name of the I²C interface (you can change it to something else if you want to),
+which will be used as the key to get the interface instance in the driver.
+And the <code>&quot;type&quot;: &quot;i2c&quot;</code> informs Ruff framework to distribute an I²C interface instead of others.</p>
+<h4 id="arguments-span-a-class-mark-href-i2c_arguments-id-i2c_arguments-a-span-">Arguments<span><a class="mark" href="#i2c_arguments" id="i2c_arguments">#</a></span></h4>
+<h5 id="-address-span-a-class-mark-href-i2c_address-id-i2c_address-a-span-"><code>address</code><span><a class="mark" href="#i2c_address" id="i2c_address">#</a></span></h5>
+<p>Required, address of this I²C interface. You can usually find this value from the hardware datasheet.</p>
+<h2 id="writing-a-driver-span-a-class-mark-href-i2c_writing_a_driver-id-i2c_writing_a_driver-a-span-">Writing a Driver<span><a class="mark" href="#i2c_writing_a_driver" id="i2c_writing_a_driver">#</a></span></h2>
+<pre><code class="lang-js">&#39;use strict&#39;;
+
+var driver = require(&#39;ruff-driver&#39;);
+
+module.exports = driver({
+    attach: function (inputs) {
+        this._i2c = inputs[&#39;i2c&#39;];
+    },
+    exports: {
+        getUselessData: function (callback) {
+            this._i2c.readByte(0x01, function (error, value) {
+                if (error) {
+                    callback(error);
+                    return;
+                }
+
+                callback(undefined, 0xff - value);
+            });
+        }
+    }
+});
+</code></pre>
+<h2 id="api-references-span-a-class-mark-href-i2c_api_references-id-i2c_api_references-a-span-">API References<span><a class="mark" href="#i2c_api_references" id="i2c_api_references">#</a></span></h2>
+<h3 id="methods-span-a-class-mark-href-i2c_methods-id-i2c_methods-a-span-">Methods<span><a class="mark" href="#i2c_methods" id="i2c_methods">#</a></span></h3>
+<h4 id="-readbyte-command-callback-span-a-class-mark-href-i2c_readbyte_command_callback-id-i2c_readbyte_command_callback-a-span-"><code>readByte(command, callback)</code><span><a class="mark" href="#i2c_readbyte_command_callback" id="i2c_readbyte_command_callback">#</a></span></h4>
+<p>Read a byte from the interface.</p>
+<ul>
+<li><strong>command:</strong> A byte to write before reading from the interface, could be <code>-1</code> if none.</li>
+</ul>
+<h4 id="-readword-command-callback-span-a-class-mark-href-i2c_readword_command_callback-id-i2c_readword_command_callback-a-span-"><code>readWord(command, callback)</code><span><a class="mark" href="#i2c_readword_command_callback" id="i2c_readword_command_callback">#</a></span></h4>
+<p>Read a 16-bit integer from the interface.</p>
+<ul>
+<li><strong>command:</strong> A byte to write before reading from the interface, could be <code>-1</code> if none.</li>
+</ul>
+<h4 id="-readbytes-command-length-callback-span-a-class-mark-href-i2c_readbytes_command_length_callback-id-i2c_readbytes_command_length_callback-a-span-"><code>readBytes(command, length, callback)</code><span><a class="mark" href="#i2c_readbytes_command_length_callback" id="i2c_readbytes_command_length_callback">#</a></span></h4>
+<p>Read a bytes array (array of number) with length given.</p>
+<ul>
+<li><strong>command:</strong> A byte to write before reading from the interface, could be <code>-1</code> if none.</li>
+<li><strong>length:</strong> The length of bytes array to read.</li>
+</ul>
+<h4 id="-writebyte-command-value-callback-span-a-class-mark-href-i2c_writebyte_command_value_callback-id-i2c_writebyte_command_value_callback-a-span-"><code>writeByte(command, value[, callback])</code><span><a class="mark" href="#i2c_writebyte_command_value_callback" id="i2c_writebyte_command_value_callback">#</a></span></h4>
+<p>Write a byte to the interface.</p>
+<ul>
+<li><strong>command:</strong> A byte to write before writing to the interface, could be <code>-1</code> if none.</li>
+<li><strong>value:</strong> Byte to write.</li>
+</ul>
+<h4 id="-writeword-command-value-callback-span-a-class-mark-href-i2c_writeword_command_value_callback-id-i2c_writeword_command_value_callback-a-span-"><code>writeWord(command, value[, callback])</code><span><a class="mark" href="#i2c_writeword_command_value_callback" id="i2c_writeword_command_value_callback">#</a></span></h4>
+<p>Write a 16-bit integer to the interface.</p>
+<ul>
+<li><strong>command:</strong> A byte to write before writing to the interface, could be <code>-1</code> if none.</li>
+<li><strong>value:</strong> The 16-bit integer to write.</li>
+</ul>
+<h4 id="-writebytes-command-values-callback-span-a-class-mark-href-i2c_writebytes_command_values_callback-id-i2c_writebytes_command_values_callback-a-span-"><code>writeBytes(command, values[, callback])</code><span><a class="mark" href="#i2c_writebytes_command_values_callback" id="i2c_writebytes_command_values_callback">#</a></span></h4>
+<p>Write an array of bytes to the interface.</p>
+<ul>
+<li><strong>command:</strong> A byte to write before writing to the interface, could be <code>-1</code> if none.</li>
+<li><strong>values:</strong> The array of bytes to write.</li>
+</ul>
+
+      </div>
+    </div>
+  </div>
+  <div id="footer">
+  </div>
+
+  <script src="assets/sh_main.js"></script>
+  <script src="assets/sh_javascript.min.js"></script>
+  <script>highlight(undefined, undefined, 'pre');</script>
+</body>
+</html>
+

@@ -1,0 +1,7 @@
+{
+  "name": "dns",
+  "version": "1.0.0",
+  "description": "The new dns module",
+  "author": "piyi",
+  "main": "src/index.js"
+}

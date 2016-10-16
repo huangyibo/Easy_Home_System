@@ -1,0 +1,7 @@
+{
+  "name": "dgram",
+  "version": "1.0.0",
+  "description": "Awesome Project",
+  "author": "Ruff",
+  "main": "src/index.js"
+}

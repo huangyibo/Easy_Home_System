@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Ruff Mock Ruff 1.5.0 Manual &amp; Documentation</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic">
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="assets/sh.css">
+  <link rel="canonical" href="https://ruff.io/api/ruff-mock.html">
+</head>
+<body class="alt apidoc" id="api-section-ruff-mock">
+  <div id="content" class="clearfix">
+    <div id="column1" data-id="ruff-mock" class="interior">
+      <header>
+        <h1>Ruff 1.5.0 Documentation</h1>
+        <hr>
+      </header>
+
+      <div id="toc">
+        <h2>Table of Contents</h2>
+        <ul>
+<li><a href="#ruff_mock_ruff_mock">Ruff Mock</a><ul>
+<li><a href="#ruff_mock_usage">Usage</a><ul>
+<li><a href="#ruff_mock_stub">Stub</a></li>
+<li><a href="#ruff_mock_any_mock">Any Mock</a></li>
+<li><a href="#ruff_mock_arguments_matching">Arguments Matching</a></li>
+<li><a href="#ruff_mock_verifying">Verifying</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+      </div>
+
+      <div id="apicontent">
+        <h1 id="ruff-mock-span-a-class-mark-href-ruff_mock_ruff_mock-id-ruff_mock_ruff_mock-a-span-">Ruff Mock<span><a class="mark" href="#ruff_mock_ruff_mock" id="ruff_mock_ruff_mock">#</a></span></h1>
+<p>Ruff Mock is a stub/mock framework in order to create mock/stub and verification.</p>
+<p><strong>The API of Ruff Mock is not yet stable and subject to change in the near future.</strong></p>
+<h2 id="usage-span-a-class-mark-href-ruff_mock_usage-id-ruff_mock_usage-a-span-">Usage<span><a class="mark" href="#ruff_mock_usage" id="ruff_mock_usage">#</a></span></h2>
+<pre><code class="lang-js">var mock = require(&#39;ruff-mock&#39;);
+</code></pre>
+<h3 id="stub-span-a-class-mark-href-ruff_mock_stub-id-ruff_mock_stub-a-span-">Stub<span><a class="mark" href="#ruff_mock_stub" id="ruff_mock_stub">#</a></span></h3>
+<pre><code class="lang-javascript">var mock = require(&#39;ruff-mock&#39;);
+
+var when = mock.when;
+var whenever = mock.whenever;
+
+var target = {
+    get: function () {
+        return &#39;biu&#39;;
+    }
+};
+
+// Mock an object, true indicates it accepts mocking methods that does not exit on the object.
+var mocked = mock(target, true);
+
+// Stub
+when(mocked)
+    .get(&#39;foo&#39;)
+    .thenReturn(&#39;bar&#39;);
+
+mocked.get(&#39;foo&#39;); // &#39;bar&#39;
+mocked.get(&#39;foo&#39;); // &#39;biu&#39;
+
+whenever(mocked)
+    .get(&#39;foo&#39;)
+    .thenReturn(&#39;bar&#39;);
+
+mocked.get(&#39;foo&#39;); // &#39;bar&#39;
+mocked.get(&#39;foo&#39;); // &#39;bar&#39;
+</code></pre>
+<h3 id="any-mock-span-a-class-mark-href-ruff_mock_any_mock-id-ruff_mock_any_mock-a-span-">Any Mock<span><a class="mark" href="#ruff_mock_any_mock" id="ruff_mock_any_mock">#</a></span></h3>
+<pre><code class="lang-javascript">var mock = require(&#39;ruff-mock&#39;);
+
+var mockAny = mock.mockAny;
+var when = mock.when;
+
+var mocked = mockAny();
+
+when(mocked)
+    .get(&#39;foo&#39;)
+    .thenReturn(&#39;bar&#39;);
+
+mocked.get(&#39;foo&#39;); // &#39;bar&#39;
+</code></pre>
+<h3 id="arguments-matching-span-a-class-mark-href-ruff_mock_arguments_matching-id-ruff_mock_arguments_matching-a-span-">Arguments Matching<span><a class="mark" href="#ruff_mock_arguments_matching" id="ruff_mock_arguments_matching">#</a></span></h3>
+<pre><code class="lang-javascript">var assert = require(&#39;assert&#39;);
+var mock = require(&#39;ruff-mock&#39;);
+
+var when = mock.when;
+var any = mock.any;
+
+var mocked = mock({}, true);
+
+when(mocked)
+    .get(any, Function)
+    .then(function (name, callback) {
+        assert.equal(name, &#39;foo&#39;);
+        callback(undefined, &#39;bar&#39;);
+    });
+
+mocked.get(&#39;foo&#39;, function (error, result) {
+    assert.ifError(error);
+    assert.equal(result, &#39;bar&#39;);
+});
+</code></pre>
+<h3 id="verifying-span-a-class-mark-href-ruff_mock_verifying-id-ruff_mock_verifying-a-span-">Verifying<span><a class="mark" href="#ruff_mock_verifying" id="ruff_mock_verifying">#</a></span></h3>
+<pre><code class="lang-javascript">var mock = require(&#39;ruff-mock&#39;);
+
+var verify = mock.verify;
+
+var mocked = mock([]);
+
+mocked.push(&#39;foo&#39;);
+
+verify(mocked).push(&#39;one&#39;);
+</code></pre>
+<p>Ruff mock provides some default verification mode:</p>
+<ul>
+<li><code>once</code>: make sure the target function has been invoked only once.</li>
+<li><code>twice</code>: make sure the target function has been invoked only twice.</li>
+<li><code>times</code>: you can specify how many times the target function has been invoked.</li>
+<li><code>atLeast</code>: how many times the target function has been invoked at least.</li>
+<li><code>atMost</code>: how many times the target function has been invoked at most.</li>
+<li><code>never</code>: making sure interaction(s) never happened.</li>
+</ul>
+
+      </div>
+    </div>
+  </div>
+  <div id="footer">
+  </div>
+
+  <script src="assets/sh_main.js"></script>
+  <script src="assets/sh_javascript.min.js"></script>
+  <script>highlight(undefined, undefined, 'pre');</script>
+</body>
+</html>
+

@@ -1,0 +1,7 @@
+{
+  "name": "stream",
+  "version": "1.0.0",
+  "description": "a stream is an abstract interface implemented by various objects",
+  "author": "Ruff",
+  "main": "src/index.js"
+}

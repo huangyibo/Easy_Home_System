@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Ruff Driver Ruff 1.5.0 Manual &amp; Documentation</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic">
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="assets/sh.css">
+  <link rel="canonical" href="https://ruff.io/api/ruff-driver.html">
+</head>
+<body class="alt apidoc" id="api-section-ruff-driver">
+  <div id="content" class="clearfix">
+    <div id="column1" data-id="ruff-driver" class="interior">
+      <header>
+        <h1>Ruff 1.5.0 Documentation</h1>
+        <hr>
+      </header>
+
+      <div id="toc">
+        <h2>Table of Contents</h2>
+        <ul>
+<li><a href="#ruff_driver_ruff_driver">Ruff Driver</a><ul>
+<li><a href="#ruff_driver_usage">Usage</a></li>
+<li><a href="#ruff_driver_configuring_driver_json">Configuring <code>driver.json</code></a></li>
+<li><a href="#ruff_driver_defining_device">Defining Device</a><ul>
+<li><a href="#ruff_driver_options">Options</a><ul>
+<li><a href="#ruff_driver_attach_inputs_context_callback"><code>attach(inputs, context[, callback])</code></a></li>
+<li><a href="#ruff_driver_detach_callback"><code>detach([callback])</code></a></li>
+<li><a href="#ruff_driver_getinterface_name_options_callback"><code>getInterface(name, options[, callback])</code></a></li>
+<li><a href="#ruff_driver_exports"><code>exports</code></a></li>
+<li><a href="#ruff_driver_traits"><code>traits</code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+      </div>
+
+      <div id="apicontent">
+        <h1 id="ruff-driver-span-a-class-mark-href-ruff_driver_ruff_driver-id-ruff_driver_ruff_driver-a-span-">Ruff Driver<span><a class="mark" href="#ruff_driver_ruff_driver" id="ruff_driver_ruff_driver">#</a></span></h1>
+<p>The <code>ruff-driver</code> module provides you a facility for Ruff driver developers to build their device driver.</p>
+<h2 id="usage-span-a-class-mark-href-ruff_driver_usage-id-ruff_driver_usage-a-span-">Usage<span><a class="mark" href="#ruff_driver_usage" id="ruff_driver_usage">#</a></span></h2>
+<pre><code class="lang-js">var driver = require(&#39;ruff-driver&#39;);
+</code></pre>
+<h2 id="configuring-driver-json-span-a-class-mark-href-ruff_driver_configuring_driver_json-id-ruff_driver_configuring_driver_json-a-span-">Configuring <code>driver.json</code><span><a class="mark" href="#ruff_driver_configuring_driver_json" id="ruff_driver_configuring_driver_json">#</a></span></h2>
+<p><code>driver.json</code> is the configuration file that describes the information that related to the driver,
+and what interfaces the device requires and exports.</p>
+<pre><code class="lang-json">{
+    &quot;models&quot;: [...],
+    &quot;inputs&quot;: {
+        &quot;...&quot;: {
+            &quot;type&quot;: ...,
+            &quot;args&quot;: {
+                ...
+            }
+        }
+    }
+}
+</code></pre>
+<p>Please refer to interface documentations for more detailed configurations:</p>
+<ul>
+<li><a href="./gpio.html">GPIO</a></li>
+<li><a href="./i2c.html">I²C</a></li>
+<li><a href="./uart.html">UART</a></li>
+<li><a href="./pwm.html">PWM</a></li>
+<li><a href="./adc.html">ADC</a></li>
+</ul>
+<h2 id="defining-device-span-a-class-mark-href-ruff_driver_defining_device-id-ruff_driver_defining_device-a-span-">Defining Device<span><a class="mark" href="#ruff_driver_defining_device" id="ruff_driver_defining_device">#</a></span></h2>
+<pre><code class="lang-js">&#39;use strict&#39;;
+
+var driver = require(&#39;ruff-driver&#39;);
+
+module.exports = driver({
+    attach: function (inputs) {
+        // ...
+    }
+});
+</code></pre>
+<h3 id="options-span-a-class-mark-href-ruff_driver_options-id-ruff_driver_options-a-span-">Options<span><a class="mark" href="#ruff_driver_options" id="ruff_driver_options">#</a></span></h3>
+<h4 id="-attach-inputs-context-callback-span-a-class-mark-href-ruff_driver_attach_inputs_context_callback-id-ruff_driver_attach_inputs_context_callback-a-span-"><code>attach(inputs, context[, callback])</code><span><a class="mark" href="#ruff_driver_attach_inputs_context_callback" id="ruff_driver_attach_inputs_context_callback">#</a></span></h4>
+<p>A function with three or less parameters that intializes the device instance.</p>
+<ul>
+<li><strong>inputs:</strong> A map of assigned interfaces according to <code>driver.json</code>.</li>
+<li><strong>context:</strong> Context of this instance to attach.<ul>
+<li><strong>id:</strong> ID of the device.</li>
+<li><strong>model:</strong> Model of the device.</li>
+<li><strong>args:</strong> A map of device arguments.</li>
+</ul>
+</li>
+<li><strong>callback:</strong> If the third parameter presents, the callback for asyncrhonous attaching.</li>
+</ul>
+<h4 id="-detach-callback-span-a-class-mark-href-ruff_driver_detach_callback-id-ruff_driver_detach_callback-a-span-"><code>detach([callback])</code><span><a class="mark" href="#ruff_driver_detach_callback" id="ruff_driver_detach_callback">#</a></span></h4>
+<p>Optional. A function that disposes the device instance.</p>
+<ul>
+<li><strong>callback:</strong> If presents, the callback for asynchronous detaching.</li>
+</ul>
+<h4 id="-getinterface-name-options-callback-span-a-class-mark-href-ruff_driver_getinterface_name_options_callback-id-ruff_driver_getinterface_name_options_callback-a-span-"><code>getInterface(name, options[, callback])</code><span><a class="mark" href="#ruff_driver_getinterface_name_options_callback" id="ruff_driver_getinterface_name_options_callback">#</a></span></h4>
+<p>Optional. A function to get interface instance if any, this should be required if <code>driver.json</code> has <code>outputs</code> configured.</p>
+<ul>
+<li><strong>name:</strong> The name of interface requested.</li>
+<li><strong>options:</strong> Options (defined by <code>args</code> in <code>driver.json</code>) to initiate the interface.</li>
+<li><strong>callback:</strong> If presents, the callback for asyncrhonous attaching.</li>
+</ul>
+<h4 id="-exports-span-a-class-mark-href-ruff_driver_exports-id-ruff_driver_exports-a-span-"><code>exports</code><span><a class="mark" href="#ruff_driver_exports" id="ruff_driver_exports">#</a></span></h4>
+<p>Optional. An object with properties or methods to be copied to the prototype of device.</p>
+<h4 id="-traits-span-a-class-mark-href-ruff_driver_traits-id-ruff_driver_traits-a-span-"><code>traits</code><span><a class="mark" href="#ruff_driver_traits" id="ruff_driver_traits">#</a></span></h4>
+<p>Optional. An array of <a href="./trait.html">traits</a> to be applied.</p>
+
+      </div>
+    </div>
+  </div>
+  <div id="footer">
+  </div>
+
+  <script src="assets/sh_main.js"></script>
+  <script src="assets/sh_javascript.min.js"></script>
+  <script>highlight(undefined, undefined, 'pre');</script>
+</body>
+</html>
+

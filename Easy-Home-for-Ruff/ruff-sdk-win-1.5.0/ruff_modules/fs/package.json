@@ -1,0 +1,7 @@
+{
+  "name": "fs",
+  "version": "1.0.2",
+  "description": "Awesome Project",
+  "author": "Ruff",
+  "main": "src/index.js"
+}

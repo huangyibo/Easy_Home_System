@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Ruff Async Ruff 1.5.0 Manual &amp; Documentation</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic">
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="assets/sh.css">
+  <link rel="canonical" href="https://ruff.io/api/ruff-async.html">
+</head>
+<body class="alt apidoc" id="api-section-ruff-async">
+  <div id="content" class="clearfix">
+    <div id="column1" data-id="ruff-async" class="interior">
+      <header>
+        <h1>Ruff 1.5.0 Documentation</h1>
+        <hr>
+      </header>
+
+      <div id="toc">
+        <h2>Table of Contents</h2>
+        <ul>
+<li><a href="#ruff_async_ruff_async">Ruff Async</a><ul>
+<li><a href="#ruff_async_usage">Usage</a></li>
+<li><a href="#ruff_async_api_referernces">API Referernces</a><ul>
+<li><a href="#ruff_async_classes">Classes</a><ul>
+<li><a href="#ruff_async_queue"><code>Queue</code></a><ul>
+<li><a href="#ruff_async_members">Members</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#ruff_async_functions">Functions</a><ul>
+<li><a href="#ruff_async_series_tasks_callback"><code>series(tasks[, callback])</code></a></li>
+<li><a href="#ruff_async_eachseries_values_handler_callback"><code>eachSeries(values, handler[, callback])</code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+      </div>
+
+      <div id="apicontent">
+        <h1 id="ruff-async-span-a-class-mark-href-ruff_async_ruff_async-id-ruff_async_ruff_async-a-span-">Ruff Async<span><a class="mark" href="#ruff_async_ruff_async" id="ruff_async_ruff_async">#</a></span></h1>
+<p>Ruff asynchronous programming utilities.</p>
+<h2 id="usage-span-a-class-mark-href-ruff_async_usage-id-ruff_async_usage-a-span-">Usage<span><a class="mark" href="#ruff_async_usage" id="ruff_async_usage">#</a></span></h2>
+<pre><code class="lang-js">var async = require(&#39;ruff-async&#39;);
+</code></pre>
+<h2 id="api-referernces-span-a-class-mark-href-ruff_async_api_referernces-id-ruff_async_api_referernces-a-span-">API Referernces<span><a class="mark" href="#ruff_async_api_referernces" id="ruff_async_api_referernces">#</a></span></h2>
+<h3 id="classes-span-a-class-mark-href-ruff_async_classes-id-ruff_async_classes-a-span-">Classes<span><a class="mark" href="#ruff_async_classes" id="ruff_async_classes">#</a></span></h3>
+<h4 id="-queue-span-a-class-mark-href-ruff_async_queue-id-ruff_async_queue-a-span-"><code>Queue</code><span><a class="mark" href="#ruff_async_queue" id="ruff_async_queue">#</a></span></h4>
+<p><code>new Queue(handler)</code></p>
+<p>Create a queue instance with given handler.</p>
+<ul>
+<li><strong>handler:</strong> A function that take its last argument as a callback.</li>
+</ul>
+<p>It is common for a method to queue inner operations, and <code>Queue</code> provides an easy way for both library developers and application developers.</p>
+<pre><code class="lang-js">&#39;use strict&#39;;
+
+var Queue = require(&#39;ruff-async&#39;).Queue;
+
+function Foo() {
+    // Create a queue handled by `_writeHandler`.
+    this._queue = new Queue(this._writeHandler);
+}
+
+Foo.prototype._writeHandler = function (data, callback) {
+    // Do some asynchronous operation, and callback.
+    setTimeout(callback, 100);
+};
+
+Foo.prototype.write = function (data, callback) {
+    // Callback here is optioanl, make assertion by yourself if necessary.
+    this._queue.push(this, [data], callback);
+};
+
+var foo = new Foo();
+
+foo.write(&#39;biu&#39;);
+foo.write(&#39;pia&#39;);
+foo.write(&#39;yo&#39;, function (error) {
+    // An error happened on `foo.write(&#39;biu&#39;)` or `foo.write(&#39;pia&#39;)` could be caught here,
+    // and operations after that error will not have `_writeHandler` called.
+});
+</code></pre>
+<p>An error will fall through from one operation to another only if:</p>
+<ul>
+<li>No callback is provided for the previous operation.</li>
+<li>The later operation is pushed in the same event loop as the previous one.</li>
+</ul>
+<h5 id="members-span-a-class-mark-href-ruff_async_members-id-ruff_async_members-a-span-">Members<span><a class="mark" href="#ruff_async_members" id="ruff_async_members">#</a></span></h5>
+<table>
+<thead>
+<tr>
+<th>Member</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>push(thisArg, args[, callback])</code></td>
+<td>Push an item into the queue. The handler passed to <code>Queue</code> constructor will be called as <code>handler.apply(thisArg, args.concat(next))</code>, where the <code>next(error, value)</code> callback is created inside <code>Queue</code> rather than what a user passed in.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="functions-span-a-class-mark-href-ruff_async_functions-id-ruff_async_functions-a-span-">Functions<span><a class="mark" href="#ruff_async_functions" id="ruff_async_functions">#</a></span></h3>
+<h4 id="-series-tasks-callback-span-a-class-mark-href-ruff_async_series_tasks_callback-id-ruff_async_series_tasks_callback-a-span-"><code>series(tasks[, callback])</code><span><a class="mark" href="#ruff_async_series_tasks_callback" id="ruff_async_series_tasks_callback">#</a></span></h4>
+<p>Run tasks in series.</p>
+<ul>
+<li><strong>tasks:</strong> An array of functions that takes one argument as the <code>next(error, value)</code> callback.</li>
+<li><strong>callback:</strong> A callback that has the first argument as error, and the second as the array of values passed to the second parameter of <code>next</code> callback.</li>
+</ul>
+<h4 id="-eachseries-values-handler-callback-span-a-class-mark-href-ruff_async_eachseries_values_handler_callback-id-ruff_async_eachseries_values_handler_callback-a-span-"><code>eachSeries(values, handler[, callback])</code><span><a class="mark" href="#ruff_async_eachseries_values_handler_callback" id="ruff_async_eachseries_values_handler_callback">#</a></span></h4>
+<p>Traverse values in series by an asynchronous handler.</p>
+<ul>
+<li><strong>values:</strong> An array of values to be traversed.</li>
+<li><strong>handler:</strong> An asynchronous handler that takes the first argument as a value to be traversed, and the second as the <code>next(error)</code> callback.</li>
+<li><strong>callback:</strong> A callback that has the first argument as error, if any.</li>
+</ul>
+
+      </div>
+    </div>
+  </div>
+  <div id="footer">
+  </div>
+
+  <script src="assets/sh_main.js"></script>
+  <script src="assets/sh_javascript.min.js"></script>
+  <script>highlight(undefined, undefined, 'pre');</script>
+</body>
+</html>
+

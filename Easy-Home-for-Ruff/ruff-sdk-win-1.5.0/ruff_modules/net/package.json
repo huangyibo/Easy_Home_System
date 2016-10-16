@@ -1,0 +1,7 @@
+{
+  "name": "net",
+  "version": "1.0.4",
+  "description": "The new net module",
+  "author": "Ruff",
+  "main": "src/index.js"
+}

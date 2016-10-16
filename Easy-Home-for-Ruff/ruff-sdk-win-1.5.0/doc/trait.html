@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Trait Ruff 1.5.0 Manual &amp; Documentation</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic">
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="assets/sh.css">
+  <link rel="canonical" href="https://ruff.io/api/trait.html">
+</head>
+<body class="alt apidoc" id="api-section-trait">
+  <div id="content" class="clearfix">
+    <div id="column1" data-id="trait" class="interior">
+      <header>
+        <h1>Ruff 1.5.0 Documentation</h1>
+        <hr>
+      </header>
+
+      <div id="toc">
+        <h2>Table of Contents</h2>
+        <ul>
+<li><a href="#trait_trait">Trait</a><ul>
+<li><a href="#trait_define_a_trait">Define a trait</a></li>
+<li><a href="#trait_include_a_trait_for_a_class">Include a trait for a class</a></li>
+<li><a href="#trait_extend_a_trait_for_a_instance">Extend a trait for a instance</a></li>
+<li><a href="#trait_api">API</a><ul>
+<li><a href="#trait_trait_spec">trait(spec)</a></li>
+<li><a href="#trait_trait_include_constructor_trait">trait.include(constructor, trait)</a></li>
+<li><a href="#trait_trait_extend_instance_trait">trait.extend(instance, trait)</a></li>
+<li><a href="#trait_trait_istrait_trait">trait.isTrait(trait);</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+      </div>
+
+      <div id="apicontent">
+        <h1 id="trait-span-a-class-mark-href-trait_trait-id-trait_trait-a-span-">Trait<span><a class="mark" href="#trait_trait" id="trait_trait">#</a></span></h1>
+<p>The <code>trait</code> module provides you with extending behaviour of a class. It can be accessed with
+<code>require(&#39;trait&#39;)</code>.</p>
+<p>Traits both provide a set of methods that implement behaviour to a class and require that the class implement a set of methods that parameterize the provided behaviour.</p>
+<h2 id="define-a-trait-span-a-class-mark-href-trait_define_a_trait-id-trait_define_a_trait-a-span-">Define a trait<span><a class="mark" href="#trait_define_a_trait" id="trait_define_a_trait">#</a></span></h2>
+<p>You can define a trait as follows:</p>
+<pre><code class="lang-javascript">var trait = require(&#39;trait&#39;);
+
+var FooTrait = trait({
+    bar: function() {
+        return this.foo() + &#39;, OK&#39;;
+    },
+    foo: trait.required
+});
+</code></pre>
+<p><code>bar</code> is the function you define to extend behaviour of a class. <code>foo</code>, annotated with <code>trait.required</code>, is the function the class need to implement.</p>
+<p>Now, we define a <code>BigBang</code> class to use this trait.</p>
+<pre><code class="lang-javascript">function BigBang() {
+}
+
+BigBang.prototype.foo = function() {
+    return &#39;foo&#39;;
+};
+</code></pre>
+<p>This <code>BigBang</code> class has defined a <code>foo</code> function which is required for <code>FooTrait</code>.</p>
+<h2 id="include-a-trait-for-a-class-span-a-class-mark-href-trait_include_a_trait_for_a_class-id-trait_include_a_trait_for_a_class-a-span-">Include a trait for a class<span><a class="mark" href="#trait_include_a_trait_for_a_class" id="trait_include_a_trait_for_a_class">#</a></span></h2>
+<p>If you add <code>FooTrait</code> to all <code>BigBang</code> instance, you can use <code>include</code> function.</p>
+<pre><code class="lang-javascript">var BigBangWithTrait = trait.include(BigBang, FooTrait);
+</code></pre>
+<p>Now any <code>BigBang</code> instance extends a <code>bar</code> function.</p>
+<pre><code class="lang-javascript">var instance = new BigBangWithTrait();
+instance.bar();
+</code></pre>
+<h2 id="extend-a-trait-for-a-instance-span-a-class-mark-href-trait_extend_a_trait_for_a_instance-id-trait_extend_a_trait_for_a_instance-a-span-">Extend a trait for a instance<span><a class="mark" href="#trait_extend_a_trait_for_a_instance" id="trait_extend_a_trait_for_a_instance">#</a></span></h2>
+<p>If <code>FooTrait</code> is only added to a specific instance, You need <code>extend</code> function.</p>
+<pre><code class="lang-javascript">var instance = new BigBang();
+var instanceWithTrait = trait.extend(instance, FooTrait);
+</code></pre>
+<p>Now <code>instance</code> has already extended a <code>bar</code> function.</p>
+<pre><code class="lang-javascript">instanceWithTrait.bar();
+</code></pre>
+<h2 id="api-span-a-class-mark-href-trait_api-id-trait_api-a-span-">API<span><a class="mark" href="#trait_api" id="trait_api">#</a></span></h2>
+<h3 id="trait-spec-span-a-class-mark-href-trait_trait_spec-id-trait_trait_spec-a-span-">trait(spec)<span><a class="mark" href="#trait_trait_spec" id="trait_trait_spec">#</a></span></h3>
+<p>Create a trait. The <code>spec</code> argument should be a plain object. e.g.</p>
+<pre><code class="lang-javascript">trait({
+    bar: function() {
+        return this.foo() + &#39;, OK&#39;;
+    },
+    foo: trait.required
+})
+</code></pre>
+<p>There are two kinds of function in trait:</p>
+<ul>
+<li>Plain Javascript function. It will become a provided function in trait and will be a member function of the target class, which means <code>this</code> could be used to access the function defined in trait, or the required function.</li>
+<li>Required function. It is annotated with <code>trait.required</code>, which is the function the class need to implement.</li>
+</ul>
+<h3 id="trait-include-constructor-trait-span-a-class-mark-href-trait_trait_include_constructor_trait-id-trait_trait_include_constructor_trait-a-span-">trait.include(constructor, trait)<span><a class="mark" href="#trait_trait_include_constructor_trait" id="trait_trait_include_constructor_trait">#</a></span></h3>
+<p>Include <code>trait</code> into <code>constructor</code>. All <code>trait</code> provided functions will be a part of the prototype of <code>constructor</code>. It also checks if required functions in <code>trait</code> exist in the protype of <code>constructor</code>.</p>
+<p>The return value is the constructor with trait. You can <code>new</code> instance with it directly.</p>
+<p>In current implementation, the prototype of <code>constructor</code> will be changed. Potentially, this behaviour could be changed in the future.</p>
+<h3 id="trait-extend-instance-trait-span-a-class-mark-href-trait_trait_extend_instance_trait-id-trait_trait_extend_instance_trait-a-span-">trait.extend(instance, trait)<span><a class="mark" href="#trait_trait_extend_instance_trait" id="trait_trait_extend_instance_trait">#</a></span></h3>
+<p>extend <code>instance</code> with <code>trait</code>. All <code>trait</code> provided functions will be a part of the prototype of <code>instance</code>. It also checks if required functions in <code>trait</code> exist in the protype of <code>instance</code>.</p>
+<p>The return value is the instance with trait. You can use this instance directly.</p>
+<p>In current implementation, <code>instance</code> will be changed. Potentially, this behaviour could be changed in the future.</p>
+<h3 id="trait-istrait-trait-span-a-class-mark-href-trait_trait_istrait_trait-id-trait_trait_istrait_trait-a-span-">trait.isTrait(trait);<span><a class="mark" href="#trait_trait_istrait_trait" id="trait_trait_istrait_trait">#</a></span></h3>
+<p>Return true if the argument is <code>trait</code> created by this module, otherwise, false.</p>
+
+      </div>
+    </div>
+  </div>
+  <div id="footer">
+  </div>
+
+  <script src="assets/sh_main.js"></script>
+  <script src="assets/sh_javascript.min.js"></script>
+  <script>highlight(undefined, undefined, 'pre');</script>
+</body>
+</html>
+

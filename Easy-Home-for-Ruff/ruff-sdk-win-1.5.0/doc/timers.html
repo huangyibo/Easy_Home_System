@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Timers Ruff 1.5.0 Manual &amp; Documentation</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic">
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="assets/sh.css">
+  <link rel="canonical" href="https://ruff.io/api/timers.html">
+</head>
+<body class="alt apidoc" id="api-section-timers">
+  <div id="content" class="clearfix">
+    <div id="column1" data-id="timers" class="interior">
+      <header>
+        <h1>Ruff 1.5.0 Documentation</h1>
+        <hr>
+      </header>
+
+      <div id="toc">
+        <h2>Table of Contents</h2>
+        <ul>
+<li><a href="#timers_timers">Timers</a><ul>
+<li><a href="#timers_settimeout_callback_delay_arg">setTimeout(callback, delay[, arg][, ...])</a></li>
+<li><a href="#timers_cleartimeout_timeoutobject">clearTimeout(timeoutObject)</a></li>
+<li><a href="#timers_setinterval_callback_delay_arg">setInterval(callback, delay[, arg][, ...])</a></li>
+<li><a href="#timers_clearinterval_intervalobject">clearInterval(intervalObject)</a></li>
+<li><a href="#timers_setimmediate_callback_arg">setImmediate(callback[, arg][, ...])</a></li>
+<li><a href="#timers_clearimmediate_immediateobject">clearImmediate(immediateObject)</a></li>
+</ul>
+</li>
+</ul>
+
+      </div>
+
+      <div id="apicontent">
+        <h1 id="timers-span-a-class-mark-href-timers_timers-id-timers_timers-a-span-">Timers<span><a class="mark" href="#timers_timers" id="timers_timers">#</a></span></h1>
+<p>All of the timer functions are globals.  You do not need to <code>require()</code>
+this module in order to use them.</p>
+<h2 id="settimeout-callback-delay-arg-span-a-class-mark-href-timers_settimeout_callback_delay_arg-id-timers_settimeout_callback_delay_arg-a-span-">setTimeout(callback, delay[, arg][, ...])<span><a class="mark" href="#timers_settimeout_callback_delay_arg" id="timers_settimeout_callback_delay_arg">#</a></span></h2>
+<p>To schedule execution of a one-time <code>callback</code> after <code>delay</code> milliseconds. Returns a
+<code>timeoutObject</code> for possible use with <code>clearTimeout()</code>. Optionally you can
+also pass arguments to the callback.</p>
+<p>It is important to note that your callback will probably not be called in exactly
+<code>delay</code> milliseconds - Ruff makes no guarantees about the exact timing of when
+the callback will fire, nor of the ordering things will fire in. The callback will
+be called as close as possible to the time specified.</p>
+<h2 id="cleartimeout-timeoutobject-span-a-class-mark-href-timers_cleartimeout_timeoutobject-id-timers_cleartimeout_timeoutobject-a-span-">clearTimeout(timeoutObject)<span><a class="mark" href="#timers_cleartimeout_timeoutobject" id="timers_cleartimeout_timeoutobject">#</a></span></h2>
+<p>Prevents a timeout from triggering.</p>
+<h2 id="setinterval-callback-delay-arg-span-a-class-mark-href-timers_setinterval_callback_delay_arg-id-timers_setinterval_callback_delay_arg-a-span-">setInterval(callback, delay[, arg][, ...])<span><a class="mark" href="#timers_setinterval_callback_delay_arg" id="timers_setinterval_callback_delay_arg">#</a></span></h2>
+<p>To schedule the repeated execution of <code>callback</code> every <code>delay</code> milliseconds.
+Returns a <code>intervalObject</code> for possible use with <code>clearInterval()</code>. Optionally
+you can also pass arguments to the callback.</p>
+<h2 id="clearinterval-intervalobject-span-a-class-mark-href-timers_clearinterval_intervalobject-id-timers_clearinterval_intervalobject-a-span-">clearInterval(intervalObject)<span><a class="mark" href="#timers_clearinterval_intervalobject" id="timers_clearinterval_intervalobject">#</a></span></h2>
+<p>Stops an interval from triggering.</p>
+<h2 id="setimmediate-callback-arg-span-a-class-mark-href-timers_setimmediate_callback_arg-id-timers_setimmediate_callback_arg-a-span-">setImmediate(callback[, arg][, ...])<span><a class="mark" href="#timers_setimmediate_callback_arg" id="timers_setimmediate_callback_arg">#</a></span></h2>
+<p>To schedule the &quot;immediate&quot; execution of <code>callback</code> after I/O events
+callbacks and before <code>setTimeout</code> and <code>setInterval</code> . Returns an
+<code>immediateObject</code> for possible use with <code>clearImmediate()</code>. Optionally you
+can also pass arguments to the callback.</p>
+<p>Callbacks for immediates are queued in the order in which they were created.
+The entire callback queue is processed every event loop iteration. If you queue
+an immediate from inside an executing callback, that immediate won&#39;t fire
+until the next event loop iteration.</p>
+<h2 id="clearimmediate-immediateobject-span-a-class-mark-href-timers_clearimmediate_immediateobject-id-timers_clearimmediate_immediateobject-a-span-">clearImmediate(immediateObject)<span><a class="mark" href="#timers_clearimmediate_immediateobject" id="timers_clearimmediate_immediateobject">#</a></span></h2>
+<p>Stops an immediate from triggering.</p>
+
+      </div>
+    </div>
+  </div>
+  <div id="footer">
+  </div>
+
+  <script src="assets/sh_main.js"></script>
+  <script src="assets/sh_javascript.min.js"></script>
+  <script>highlight(undefined, undefined, 'pre');</script>
+</body>
+</html>
+

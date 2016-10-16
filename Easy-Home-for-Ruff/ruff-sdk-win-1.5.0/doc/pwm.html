@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>PWM Ruff 1.5.0 Manual &amp; Documentation</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic">
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="assets/sh.css">
+  <link rel="canonical" href="https://ruff.io/api/pwm.html">
+</head>
+<body class="alt apidoc" id="api-section-pwm">
+  <div id="content" class="clearfix">
+    <div id="column1" data-id="pwm" class="interior">
+      <header>
+        <h1>Ruff 1.5.0 Documentation</h1>
+        <hr>
+      </header>
+
+      <div id="toc">
+        <h2>Table of Contents</h2>
+        <ul>
+<li><a href="#pwm_pwm">PWM</a><ul>
+<li><a href="#pwm_using_a_pwm_interface_in_driver">Using a PWM Interface in Driver</a><ul>
+<li><a href="#pwm_configuring_driver_json">Configuring <code>driver.json</code></a><ul>
+<li><a href="#pwm_arguments">Arguments</a><ul>
+<li><a href="#pwm_frequency"><code>frequency</code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#pwm_writing_a_driver">Writing a Driver</a></li>
+</ul>
+</li>
+<li><a href="#pwm_api_references">API References</a><ul>
+<li><a href="#pwm_methods">Methods</a><ul>
+<li><a href="#pwm_setduty_duty_callback"><code>setDuty(duty[, callback])</code></a></li>
+<li><a href="#pwm_setfrequency_frequency_callback"><code>setFrequency(frequency[, callback])</code></a></li>
+<li><a href="#pwm_getduty_callback"><code>getDuty(callback)</code></a></li>
+<li><a href="#pwm_getfrequency_callback"><code>getFrequency(callback)</code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+      </div>
+
+      <div id="apicontent">
+        <h1 id="pwm-span-a-class-mark-href-pwm_pwm-id-pwm_pwm-a-span-">PWM<span><a class="mark" href="#pwm_pwm" id="pwm_pwm">#</a></span></h1>
+<p>Pulse-width modulation (PWM), or pulse-duration modulation (PDM), is a modulation technique used to encode a message into a pulsing signal.</p>
+<h2 id="using-a-pwm-interface-in-driver-span-a-class-mark-href-pwm_using_a_pwm_interface_in_driver-id-pwm_using_a_pwm_interface_in_driver-a-span-">Using a PWM Interface in Driver<span><a class="mark" href="#pwm_using_a_pwm_interface_in_driver" id="pwm_using_a_pwm_interface_in_driver">#</a></span></h2>
+<h3 id="configuring-driver-json-span-a-class-mark-href-pwm_configuring_driver_json-id-pwm_configuring_driver_json-a-span-">Configuring <code>driver.json</code><span><a class="mark" href="#pwm_configuring_driver_json" id="pwm_configuring_driver_json">#</a></span></h3>
+<p>To use a PWM interface in a driver, you need to have an input with type <code>&quot;pwm&quot;</code> in the <code>driver.json</code>:</p>
+<pre><code class="lang-json">{
+    &quot;models&quot;: [],
+    &quot;inputs&quot;: {
+        &quot;pwm&quot;: {
+            &quot;type&quot;: &quot;pwm&quot;,
+            &quot;args&quot;: {
+                &quot;frequency&quot;: 200
+            }
+        }
+    }
+}
+</code></pre>
+<p>In the JSON configuration above, the first <code>&quot;pwm&quot;</code> is just the name of the PWM interface (you can change it to something else if you want to),
+which will be used as the key to get the interface instance in the driver.
+And the <code>&quot;type&quot;: &quot;pwm&quot;</code> informs Ruff framework to distribute an PWM interface instead of others.</p>
+<h4 id="arguments-span-a-class-mark-href-pwm_arguments-id-pwm_arguments-a-span-">Arguments<span><a class="mark" href="#pwm_arguments" id="pwm_arguments">#</a></span></h4>
+<h5 id="-frequency-span-a-class-mark-href-pwm_frequency-id-pwm_frequency-a-span-"><code>frequency</code><span><a class="mark" href="#pwm_frequency" id="pwm_frequency">#</a></span></h5>
+<p>The frequency of output square wave, defaults to <code>200</code>.</p>
+<p>PWM interfaces may share the same frequency due to hardware limitations,
+You might get errors if you are trying to get PWM interfaces with different frequencies.</p>
+<h3 id="writing-a-driver-span-a-class-mark-href-pwm_writing_a_driver-id-pwm_writing_a_driver-a-span-">Writing a Driver<span><a class="mark" href="#pwm_writing_a_driver" id="pwm_writing_a_driver">#</a></span></h3>
+<pre><code class="lang-js">&#39;use strict&#39;;
+
+var driver = require(&#39;ruff-driver&#39;);
+
+module.exports = driver({
+    attach: function (inputs) {
+        this._pwm = inputs[&#39;pwm&#39;];
+    },
+    exports: {
+        setHalfDuty: function (callback) {
+            this._pwm.setDuty(0.5, callback);
+        }
+    }
+});
+</code></pre>
+<h2 id="api-references-span-a-class-mark-href-pwm_api_references-id-pwm_api_references-a-span-">API References<span><a class="mark" href="#pwm_api_references" id="pwm_api_references">#</a></span></h2>
+<h3 id="methods-span-a-class-mark-href-pwm_methods-id-pwm_methods-a-span-">Methods<span><a class="mark" href="#pwm_methods" id="pwm_methods">#</a></span></h3>
+<h4 id="-setduty-duty-callback-span-a-class-mark-href-pwm_setduty_duty_callback-id-pwm_setduty_duty_callback-a-span-"><code>setDuty(duty[, callback])</code><span><a class="mark" href="#pwm_setduty_duty_callback" id="pwm_setduty_duty_callback">#</a></span></h4>
+<p>Set the duty ratio (<code>0</code>~<code>1</code>) of the interface.</p>
+<h4 id="-setfrequency-frequency-callback-span-a-class-mark-href-pwm_setfrequency_frequency_callback-id-pwm_setfrequency_frequency_callback-a-span-"><code>setFrequency(frequency[, callback])</code><span><a class="mark" href="#pwm_setfrequency_frequency_callback" id="pwm_setfrequency_frequency_callback">#</a></span></h4>
+<p>Set the frequency of the interface, please refer to argument <code>frequency</code> for limitations.</p>
+<h4 id="-getduty-callback-span-a-class-mark-href-pwm_getduty_callback-id-pwm_getduty_callback-a-span-"><code>getDuty(callback)</code><span><a class="mark" href="#pwm_getduty_callback" id="pwm_getduty_callback">#</a></span></h4>
+<p><code>callback</code> - function(error, duty)</p>
+<p>Get the duty of the interface.</p>
+<h4 id="-getfrequency-callback-span-a-class-mark-href-pwm_getfrequency_callback-id-pwm_getfrequency_callback-a-span-"><code>getFrequency(callback)</code><span><a class="mark" href="#pwm_getfrequency_callback" id="pwm_getfrequency_callback">#</a></span></h4>
+<p><code>callback</code> - function(error, frequency)</p>
+<p>Get the frequency of the interface.</p>
+
+      </div>
+    </div>
+  </div>
+  <div id="footer">
+  </div>
+
+  <script src="assets/sh_main.js"></script>
+  <script src="assets/sh_javascript.min.js"></script>
+  <script>highlight(undefined, undefined, 'pre');</script>
+</body>
+</html>
+

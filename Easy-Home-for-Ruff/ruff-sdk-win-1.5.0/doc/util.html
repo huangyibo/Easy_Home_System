@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>util Ruff 1.5.0 Manual &amp; Documentation</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic">
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="assets/sh.css">
+  <link rel="canonical" href="https://ruff.io/api/util.html">
+</head>
+<body class="alt apidoc" id="api-section-util">
+  <div id="content" class="clearfix">
+    <div id="column1" data-id="util" class="interior">
+      <header>
+        <h1>Ruff 1.5.0 Documentation</h1>
+        <hr>
+      </header>
+
+      <div id="toc">
+        <h2>Table of Contents</h2>
+        <ul>
+<li><a href="#util_util">util</a><ul>
+<li><a href="#util_util_debuglog_section">util.debuglog(section)</a></li>
+<li><a href="#util_util_format_format">util.format(format[, ...])</a></li>
+<li><a href="#util_util_log_string">util.log(string)</a></li>
+<li><a href="#util_util_inspect_object_options">util.inspect(object[, options])</a><ul>
+<li><a href="#util_customizing_util_inspect_colors">Customizing <code>util.inspect</code> colors</a></li>
+<li><a href="#util_custom_inspect_function_on_objects">Custom <code>inspect()</code> function on Objects</a></li>
+</ul>
+</li>
+<li><a href="#util_util_inherits_constructor_superconstructor">util.inherits(constructor, superConstructor)</a></li>
+<li><a href="#util_util_deprecate_function_string">util.deprecate(function, string)</a></li>
+<li><a href="#util_util_mixin_base_exts">util.mixin(base, exts)</a></li>
+</ul>
+</li>
+</ul>
+
+      </div>
+
+      <div id="apicontent">
+        <h1 id="util-span-a-class-mark-href-util_util-id-util_util-a-span-">util<span><a class="mark" href="#util_util" id="util_util">#</a></span></h1>
+<p>These functions are in the module <code>&#39;util&#39;</code>. Use <code>require(&#39;util&#39;)</code> to
+access them.</p>
+<p>The <code>util</code> module is primarily designed to support the needs of ruff.js&#39;s
+internal APIs.  Many of these utilities are useful for your own
+programs.  If you find that these functions are lacking for your
+purposes, however, you are encouraged to write your own utilities.  We
+are not interested in any future additions to the <code>util</code> module that
+are unnecessary for ruff.js&#39;s internal functionality.</p>
+<h2 id="util-debuglog-section-span-a-class-mark-href-util_util_debuglog_section-id-util_util_debuglog_section-a-span-">util.debuglog(section)<span><a class="mark" href="#util_util_debuglog_section" id="util_util_debuglog_section">#</a></span></h2>
+<div class="signature"><ul>
+<li><code>section</code> <span class="type">String</span> The section of the program to be debugged</li>
+<li>Returns: <span class="type">Function</span> The logging function</li>
+</div></ul>
+<p>This is used to create a function which conditionally writes to stderr
+based on the existence of a <code>NODE_DEBUG</code> environment variable.  If the
+<code>section</code> name appears in that environment variable, then the returned
+function will be similar to <code>console.error()</code>.  If not, then the
+returned function is a no-op.</p>
+<p>For example:</p>
+<pre><code class="lang-javascript">var debuglog = util.debuglog(&#39;foo&#39;);
+
+var bar = 123;
+debuglog(&#39;hello from foo [%d]&#39;, bar);
+</code></pre>
+<p>If this program is run with <code>RUFF_DEBUG=foo</code> in the environment, then
+it will output something like:</p>
+<pre><code>FOO 3245: hello from foo [123]
+</code></pre><p>where <code>3245</code> is the process id.  If it is not run with that
+environment variable set, then it will not print anything.</p>
+<p>You may separate multiple <code>RUFF_DEBUG</code> environment variables with a
+comma.  For example, <code>RUFF_DEBUG=fs,net,tls</code>.</p>
+<h2 id="util-format-format-span-a-class-mark-href-util_util_format_format-id-util_util_format_format-a-span-">util.format(format[, ...])<span><a class="mark" href="#util_util_format_format" id="util_util_format_format">#</a></span></h2>
+<p>Returns a formatted string using the first argument as a <code>printf</code>-like format.</p>
+<p>The first argument is a string that contains zero or more <em>placeholders</em>.
+Each placeholder is replaced with the converted value from its corresponding
+argument. Supported placeholders are:</p>
+<ul>
+<li><code>%s</code> - String.</li>
+<li><code>%d</code> - Number (both integer and float).</li>
+<li><code>%j</code> - JSON.  Replaced with the string <code>&#39;[Circular]&#39;</code> if the argument
+contains circular references.</li>
+<li><code>%%</code> - single percent sign (<code>&#39;%&#39;</code>). This does not consume an argument.</li>
+</ul>
+<p>If the placeholder does not have a corresponding argument, the placeholder is
+not replaced.</p>
+<pre><code>util.format(&#39;%s:%s&#39;, &#39;foo&#39;); // &#39;foo:%s&#39;
+</code></pre><p>If there are more arguments than placeholders, the extra arguments are
+coerced to strings (for objects and symbols, <code>util.inspect()</code> is used)
+and then concatenated, delimited by a space.</p>
+<pre><code>util.format(&#39;%s:%s&#39;, &#39;foo&#39;, &#39;bar&#39;, &#39;baz&#39;); // &#39;foo:bar baz&#39;
+</code></pre><p>If the first argument is not a format string then <code>util.format()</code> returns
+a string that is the concatenation of all its arguments separated by spaces.
+Each argument is converted to a string with <code>util.inspect()</code>.</p>
+<pre><code>util.format(1, 2, 3); // &#39;1 2 3&#39;
+</code></pre><h2 id="util-log-string-span-a-class-mark-href-util_util_log_string-id-util_util_log_string-a-span-">util.log(string)<span><a class="mark" href="#util_util_log_string" id="util_util_log_string">#</a></span></h2>
+<p>Output with timestamp on <code>stdout</code>.</p>
+<pre><code>require(&#39;util&#39;).log(&#39;Timestamped message.&#39;);
+</code></pre><h2 id="util-inspect-object-options-span-a-class-mark-href-util_util_inspect_object_options-id-util_util_inspect_object_options-a-span-">util.inspect(object[, options])<span><a class="mark" href="#util_util_inspect_object_options" id="util_util_inspect_object_options">#</a></span></h2>
+<p>Return a string representation of <code>object</code>, which is useful for debugging.</p>
+<p>An optional <em>options</em> object may be passed that alters certain aspects of the
+formatted string:</p>
+<ul>
+<li><p><code>showHidden</code> - if <code>true</code> then the object&#39;s non-enumerable and symbol
+properties will be shown too. Defaults to <code>false</code>.</p>
+</li>
+<li><p><code>depth</code> - tells <code>inspect</code> how many times to recurse while formatting the
+object. This is useful for inspecting large complicated objects. Defaults to
+<code>2</code>. To make it recurse indefinitely pass <code>null</code>.</p>
+</li>
+<li><p><code>colors</code> - if <code>true</code>, then the output will be styled with ANSI color codes.
+Defaults to <code>false</code>. Colors are customizable, see below.</p>
+</li>
+<li><p><code>customInspect</code> - if <code>false</code>, then custom <code>inspect(depth, opts)</code> functions
+defined on the objects being inspected won&#39;t be called. Defaults to <code>true</code>.</p>
+</li>
+</ul>
+<p>Example of inspecting all properties of the <code>util</code> object:</p>
+<pre><code>var util = require(&#39;util&#39;);
+
+console.log(util.inspect(util, { showHidden: true, depth: null }));
+</code></pre><p>Values may supply their own custom <code>inspect(depth, opts)</code> functions, when
+called they receive the current depth in the recursive inspection, as well as
+the options object passed to <code>util.inspect()</code>.</p>
+<h3 id="customizing-util-inspect-colors-span-a-class-mark-href-util_customizing_util_inspect_colors-id-util_customizing_util_inspect_colors-a-span-">Customizing <code>util.inspect</code> colors<span><a class="mark" href="#util_customizing_util_inspect_colors" id="util_customizing_util_inspect_colors">#</a></span></h3>
+<!-- type=misc -->
+<p>Color output (if enabled) of <code>util.inspect</code> is customizable globally
+via <code>util.inspect.styles</code> and <code>util.inspect.colors</code> objects.</p>
+<p><code>util.inspect.styles</code> is a map assigning each style a color
+from <code>util.inspect.colors</code>.
+Highlighted styles and their default values are:</p>
+<ul>
+<li><code>number</code> (yellow)</li>
+<li><code>boolean</code> (yellow)</li>
+<li><code>string</code> (green)</li>
+<li><code>date</code> (magenta)</li>
+<li><code>regexp</code> (red)</li>
+<li><code>null</code> (bold)</li>
+<li><code>undefined</code> (grey)</li>
+<li><code>special</code> - only function at this time (cyan)</li>
+<li><code>name</code> (intentionally no styling)</li>
+</ul>
+<p>Predefined color codes are: <code>white</code>, <code>grey</code>, <code>black</code>, <code>blue</code>, <code>cyan</code>,
+<code>green</code>, <code>magenta</code>, <code>red</code> and <code>yellow</code>.
+There are also <code>bold</code>, <code>italic</code>, <code>underline</code> and <code>inverse</code> codes.</p>
+<h3 id="custom-inspect-function-on-objects-span-a-class-mark-href-util_custom_inspect_function_on_objects-id-util_custom_inspect_function_on_objects-a-span-">Custom <code>inspect()</code> function on Objects<span><a class="mark" href="#util_custom_inspect_function_on_objects" id="util_custom_inspect_function_on_objects">#</a></span></h3>
+<!-- type=misc -->
+<p>Objects also may define their own <code>inspect(depth)</code> function which <code>util.inspect()</code>
+will invoke and use the result of when inspecting the object:</p>
+<pre><code>var util = require(&#39;util&#39;);
+
+var obj = { name: &#39;nate&#39; };
+obj.inspect = function(depth) {
+  return &#39;{&#39; + this.name + &#39;}&#39;;
+};
+
+util.inspect(obj);
+  // &quot;{nate}&quot;
+</code></pre><p>You may also return another Object entirely, and the returned String will be
+formatted according to the returned Object. This is similar to how
+<code>JSON.stringify()</code> works:</p>
+<pre><code>var obj = { foo: &#39;this will not show up in the inspect() output&#39; };
+obj.inspect = function(depth) {
+  return { bar: &#39;baz&#39; };
+};
+
+util.inspect(obj);
+  // &quot;{ bar: &#39;baz&#39; }&quot;
+</code></pre><h2 id="util-inherits-constructor-superconstructor-span-a-class-mark-href-util_util_inherits_constructor_superconstructor-id-util_util_inherits_constructor_superconstructor-a-span-">util.inherits(constructor, superConstructor)<span><a class="mark" href="#util_util_inherits_constructor_superconstructor" id="util_util_inherits_constructor_superconstructor">#</a></span></h2>
+<p>Inherit the prototype methods from one
+into another.  The prototype of <code>constructor</code> will be set to a new
+object created from <code>superConstructor</code>.</p>
+<p>As an additional convenience, <code>superConstructor</code> will be accessible
+through the <code>constructor.super_</code> property.</p>
+<pre><code>var util = require(&quot;util&quot;);
+//TODO events has not been achieved
+var EventEmitter = require(&quot;events&quot;);
+
+function MyStream() {
+    EventEmitter.call(this);
+}
+
+util.inherits(MyStream, EventEmitter);
+
+MyStream.prototype.write = function(data) {
+    this.emit(&quot;data&quot;, data);
+}
+
+var stream = new MyStream();
+
+console.log(stream instanceof EventEmitter); // true
+console.log(MyStream.super_ === EventEmitter); // true
+
+stream.on(&quot;data&quot;, function(data) {
+    console.log(&#39;Received data: &quot;&#39; + data + &#39;&quot;&#39;);
+})
+stream.write(&quot;It works!&quot;); // Received data: &quot;It works!&quot;
+</code></pre><h2 id="util-deprecate-function-string-span-a-class-mark-href-util_util_deprecate_function_string-id-util_util_deprecate_function_string-a-span-">util.deprecate(function, string)<span><a class="mark" href="#util_util_deprecate_function_string" id="util_util_deprecate_function_string">#</a></span></h2>
+<p>Marks that a method should not be used any more.</p>
+<pre><code>var util = require(&#39;util&#39;);
+
+exports.puts = util.deprecate(function() {
+  for (var i = 0, len = arguments.length; i &lt; len; ++i) {
+    //TODO process has not been achieved
+    process.stdout.write(arguments[i] + &#39;\n&#39;);
+  }
+}, &#39;util.puts: Use console.log instead&#39;);
+</code></pre><p>It returns a modified function which warns once by default.</p>
+<h2 id="util-mixin-base-exts-span-a-class-mark-href-util_util_mixin_base_exts-id-util_util_mixin_base_exts-a-span-">util.mixin(base, exts)<span><a class="mark" href="#util_util_mixin_base_exts" id="util_util_mixin_base_exts">#</a></span></h2>
+
+      </div>
+    </div>
+  </div>
+  <div id="footer">
+  </div>
+
+  <script src="assets/sh_main.js"></script>
+  <script src="assets/sh_javascript.min.js"></script>
+  <script>highlight(undefined, undefined, 'pre');</script>
+</body>
+</html>
+

@@ -1,0 +1,265 @@
+html {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    height: 100%;
+    font-family: sans-serif;
+    -webkit-user-select: none;
+}
+
+button {
+    border: none;
+    border-radius: 4px;
+    height: 30px;
+    padding: 0 10px;
+    color: #fff;
+    background-color: #3498db;
+    cursor: pointer;
+    transition: background-color linear 0.1s;
+}
+
+button:disabled {
+    background-color: #aaa;
+}
+
+.error-layer {
+    position: fixed;
+    top: 70px;
+    padding: 20px 20px;
+    width: 100%;
+    color: #fff;
+    background-color: #ea6153;
+    text-align: center;
+    z-index: 10;
+}
+
+.title-layer {
+    position: fixed;
+    margin: -12px 12px;
+    padding: 4px 8px;
+    background-color: #fff;
+    border: solid 1px #ccc;
+    border-radius: 2px;
+    white-space: nowrap;
+    line-height: 20px;
+    font-family: monospace;
+    font-size: 14px;
+    color: #666;
+    z-index: 100000001;
+}
+
+.title-layer .id {
+    font-weight: bold;
+}
+
+.title-layer .alias::before {
+    content: 'alias: ';
+    font-weight: bold;
+}
+
+.title-layer .type::before {
+    content: 'type: ';
+    font-weight: bold;
+}
+
+.title-device-layer {
+    position: fixed;
+    margin: -12px 12px;
+    padding: 4px 8px;
+    background-color: #fff;
+    border: solid 1px #ccc;
+    border-radius: 2px;
+    white-space: nowrap;
+    line-height: 20px;
+    font-family: monospace;
+    font-size: 14px;
+    color: #666;
+    z-index: 100000002;
+}
+
+.title-device-layer .connection {
+    font-weight: bold;
+}
+
+.header-wrapper {
+    position: fixed;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 20px;
+    background-color: #eee;
+    overflow: hidden;
+}
+
+.header-wrapper h1 {
+    float: left;
+    margin: 0;
+    padding: 0;
+    line-height: 30px;
+    font-size: 20px;
+    font-weight: normal;
+    color: #333;
+}
+
+.header-wrapper .description {
+    float: left;
+    margin: 0 0 0 40px;
+    padding: 0;
+    line-height: 15px;
+    font-size: 12px;
+    color: #999;
+}
+
+.header-wrapper .description li {
+    margin: 0;
+}
+
+.header-wrapper button {
+    float: right;
+    margin-left: 8px;
+}
+
+.desk-wrapper {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 70px;
+    bottom: 0;
+    padding: 20px;
+    overflow: auto;
+}
+
+.desk {
+    position: relative;
+    margin: auto;
+}
+
+.device {
+    position: absolute;
+    border-radius: 8px;
+}
+
+.device::after {
+    content: attr(data-id);
+    position: absolute;
+    display: block;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    text-align: right;
+    padding: 10px;
+    color: rgba(255,255,255,0.8);
+    background-color: rgba(0,0,0,0.2);
+    border-radius: 8px;
+}
+
+.pin {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    margin: -5px;
+    background-color: #fff;
+    border: solid 1px #fff;
+    border-radius: 5px;
+    z-index: 1;
+    cursor: pointer;
+    transition: background-color linear 0.1s, opacity linear 0.1s, border-color linear 0.1s;
+}
+
+.desk.dragging .pin {
+    opacity: 0.7;
+}
+
+@keyframes twinkle {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.1;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.pin.possible-pair {
+    animation-name: twinkle;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+    z-index: 99999998!important;
+}
+
+.pin.possible-pair.hover {
+    margin: -8px;
+    width: 14px;
+    height: 14px;
+    border-radius: 8px;
+    animation: none;
+    opacity: 1;
+}
+
+.pin.connected {
+    z-index: 3;
+}
+
+.pin.selected {
+    background-color: #ea6153;
+}
+
+.pin.dragging-origin {
+    opacity: 1!important;
+    z-index: 99999998!important;
+}
+
+.desk.hover-wire .pin:not(.highlight) {
+    opacity: 0.5;
+}
+
+.desk.hover-wire .pin.highlight {
+    z-index: 100000000!important;
+}
+
+.draggable-pin {
+    position: absolute;
+    margin: -6px;
+    width: 10px;
+    height: 10px;
+    border-radius: 6px;
+    background-color: #f1c40f;
+    border: solid 1px #fff;
+    z-index: 99999999!important;
+}
+
+.wire {
+    position: absolute;
+    margin: -2px;
+    padding: 2px;
+    height: 0;
+    width: 0;
+    border-radius: 2px;
+    transition: opacity linear 0.4s;
+    cursor: pointer;
+}
+
+.wire.in-gap {
+    z-index: 99999997;
+}
+
+.desk.dragging .wire,
+.desk.hover-wire .wire:not(.highlight) {
+    opacity: 0.2;
+}
+
+.desk.hover-wire .wire.highlight {
+    z-index: 99999999!important;
+}
+
+.wire.wire-shadow {
+    z-index: 0;
+    margin: -5px;
+    padding: 5px;
+}

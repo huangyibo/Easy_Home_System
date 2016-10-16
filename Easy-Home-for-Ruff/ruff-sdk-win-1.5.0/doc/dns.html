@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>DNS Ruff 1.5.0 Manual &amp; Documentation</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic">
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="assets/sh.css">
+  <link rel="canonical" href="https://ruff.io/api/dns.html">
+</head>
+<body class="alt apidoc" id="api-section-dns">
+  <div id="content" class="clearfix">
+    <div id="column1" data-id="dns" class="interior">
+      <header>
+        <h1>Ruff 1.5.0 Documentation</h1>
+        <hr>
+      </header>
+
+      <div id="toc">
+        <h2>Table of Contents</h2>
+        <ul>
+<li><a href="#dns_dns">DNS</a><ul>
+<li><a href="#dns_dns_lookup_hostname_options_callback">dns.lookup(hostname[, options], callback)</a></li>
+</ul>
+</li>
+</ul>
+
+      </div>
+
+      <div id="apicontent">
+        <h1 id="dns-span-a-class-mark-href-dns_dns-id-dns_dns-a-span-">DNS<span><a class="mark" href="#dns_dns" id="dns_dns">#</a></span></h1>
+<p>The <code>dns</code> module contains functions to perform name resolution.</p>
+<h2 id="dns-lookup-hostname-options-callback-span-a-class-mark-href-dns_dns_lookup_hostname_options_callback-id-dns_dns_lookup_hostname_options_callback-a-span-">dns.lookup(hostname[, options], callback)<span><a class="mark" href="#dns_dns_lookup_hostname_options_callback" id="dns_dns_lookup_hostname_options_callback">#</a></span></h2>
+<p>Resolves a hostname (e.g. <code>&#39;nanchao.org&#39;</code>) into the first found A (IPv4) record.
+<code>options</code> can be an object or integer. If <code>options</code> is not provided, then IPv4 is
+valid. If <code>options</code> is an integer, then it must be <code>4</code>.</p>
+<p>Alternatively, <code>options</code> can be an object containing these properties:</p>
+<ul>
+<li><code>family</code> {Number} - The record family. If present, must be the integer
+<code>4</code>. If not provided, IP v4 is accepted.</li>
+<li><code>all</code>: {Boolean} - When <code>true</code>, the callback returns all resolved addresses
+in an array, otherwise returns a single address. Defaults to <code>false</code>.</li>
+</ul>
+<p>All properties are optional. An example usage of options is shown below.</p>
+<pre><code>{
+  family: 4,
+  all: false
+}
+</code></pre><p>The <code>callback</code> function has arguments <code>(err, address, family)</code>. <code>address</code> is a
+string representation of an IPv4. <code>family</code> is the integer <code>4</code> and denotes the family
+of <code>address</code> (not necessarily the value initially passed to <code>lookup</code>).</p>
+<p>With the <code>all</code> option set to <code>true</code>, the arguments change to
+<code>(err, addresses)</code>, with <code>addresses</code> being an array of objects with the
+properties <code>address</code> and <code>family</code>.</p>
+<p>On error, <code>err</code> is an [<code>Error</code>][] object, where <code>err.code</code> is the error code.</p>
+
+      </div>
+    </div>
+  </div>
+  <div id="footer">
+  </div>
+
+  <script src="assets/sh_main.js"></script>
+  <script src="assets/sh_javascript.min.js"></script>
+  <script>highlight(undefined, undefined, 'pre');</script>
+</body>
+</html>
+

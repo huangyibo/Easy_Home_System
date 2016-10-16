@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Assert Ruff 1.5.0 Manual &amp; Documentation</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic">
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="assets/sh.css">
+  <link rel="canonical" href="https://ruff.io/api/assert.html">
+</head>
+<body class="alt apidoc" id="api-section-assert">
+  <div id="content" class="clearfix">
+    <div id="column1" data-id="assert" class="interior">
+      <header>
+        <h1>Ruff 1.5.0 Documentation</h1>
+        <hr>
+      </header>
+
+      <div id="toc">
+        <h2>Table of Contents</h2>
+        <ul>
+<li><a href="#assert_assert">Assert</a><ul>
+<li><a href="#assert_assert_fail_actual_expected_message_operator">assert.fail(actual, expected, message, operator)</a></li>
+<li><a href="#assert_assert_value_message_assert_ok_value_message">assert(value[, message]), assert.ok(value[, message])</a></li>
+<li><a href="#assert_assert_equal_actual_expected_message">assert.equal(actual, expected[, message])</a></li>
+<li><a href="#assert_assert_notequal_actual_expected_message">assert.notEqual(actual, expected[, message])</a></li>
+<li><a href="#assert_assert_deepequal_actual_expected_message">assert.deepEqual(actual, expected[, message])</a></li>
+<li><a href="#assert_assert_notdeepequal_actual_expected_message">assert.notDeepEqual(actual, expected[, message])</a></li>
+<li><a href="#assert_assert_strictequal_actual_expected_message">assert.strictEqual(actual, expected[, message])</a></li>
+<li><a href="#assert_assert_notstrictequal_actual_expected_message">assert.notStrictEqual(actual, expected[, message])</a></li>
+<li><a href="#assert_assert_deepstrictequal_actual_expected_message">assert.deepStrictEqual(actual, expected[, message])</a></li>
+<li><a href="#assert_assert_notdeepstrictequal_actual_expected_message">assert.notDeepStrictEqual(actual, expected[, message])</a></li>
+<li><a href="#assert_assert_throws_block_error_message">assert.throws(block[, error][, message])</a></li>
+<li><a href="#assert_assert_doesnotthrow_block_error_message">assert.doesNotThrow(block[, error][, message])</a></li>
+<li><a href="#assert_assert_iferror_value">assert.ifError(value)</a></li>
+</ul>
+</li>
+</ul>
+
+      </div>
+
+      <div id="apicontent">
+        <h1 id="assert-span-a-class-mark-href-assert_assert-id-assert_assert-a-span-">Assert<span><a class="mark" href="#assert_assert" id="assert_assert">#</a></span></h1>
+<p>This module is used so that Ruff can test itself. It can be accessed with
+<code>require(&#39;assert&#39;)</code>.</p>
+<h2 id="assert-fail-actual-expected-message-operator-span-a-class-mark-href-assert_assert_fail_actual_expected_message_operator-id-assert_assert_fail_actual_expected_message_operator-a-span-">assert.fail(actual, expected, message, operator)<span><a class="mark" href="#assert_assert_fail_actual_expected_message_operator" id="assert_assert_fail_actual_expected_message_operator">#</a></span></h2>
+<p>Throws an exception that displays the values for <code>actual</code> and <code>expected</code>
+separated by the provided operator.</p>
+<h2 id="assert-value-message-assert-ok-value-message-span-a-class-mark-href-assert_assert_value_message_assert_ok_value_message-id-assert_assert_value_message_assert_ok_value_message-a-span-">assert(value[, message]), assert.ok(value[, message])<span><a class="mark" href="#assert_assert_value_message_assert_ok_value_message" id="assert_assert_value_message_assert_ok_value_message">#</a></span></h2>
+<p>Tests if value is truthy. It is equivalent to
+<code>assert.equal(true, !!value, message)</code>.</p>
+<h2 id="assert-equal-actual-expected-message-span-a-class-mark-href-assert_assert_equal_actual_expected_message-id-assert_assert_equal_actual_expected_message-a-span-">assert.equal(actual, expected[, message])<span><a class="mark" href="#assert_assert_equal_actual_expected_message" id="assert_assert_equal_actual_expected_message">#</a></span></h2>
+<p>Tests shallow, coercive equality with the equal comparison operator ( <code>==</code> ).</p>
+<h2 id="assert-notequal-actual-expected-message-span-a-class-mark-href-assert_assert_notequal_actual_expected_message-id-assert_assert_notequal_actual_expected_message-a-span-">assert.notEqual(actual, expected[, message])<span><a class="mark" href="#assert_assert_notequal_actual_expected_message" id="assert_assert_notequal_actual_expected_message">#</a></span></h2>
+<p>Tests shallow, coercive inequality with the not equal comparison operator
+( <code>!=</code> ).</p>
+<h2 id="assert-deepequal-actual-expected-message-span-a-class-mark-href-assert_assert_deepequal_actual_expected_message-id-assert_assert_deepequal_actual_expected_message-a-span-">assert.deepEqual(actual, expected[, message])<span><a class="mark" href="#assert_assert_deepequal_actual_expected_message" id="assert_assert_deepequal_actual_expected_message">#</a></span></h2>
+<p>Tests for deep equality. Primitive values are compared with the equal
+comparison operator ( <code>==</code> ).</p>
+<p>This only considers enumerable properties. It does not test object prototypes,
+attached symbols, or non-enumerable properties. This can lead to some
+potentially surprising results. For example, this does not throw an
+<code>AssertionError</code> because the properties on the <code>Error</code> object are
+non-enumerable:</p>
+<pre><code>// WARNING: This does not throw an AssertionError!
+assert.deepEqual(Error(&#39;a&#39;), Error(&#39;b&#39;));
+</code></pre><h2 id="assert-notdeepequal-actual-expected-message-span-a-class-mark-href-assert_assert_notdeepequal_actual_expected_message-id-assert_assert_notdeepequal_actual_expected_message-a-span-">assert.notDeepEqual(actual, expected[, message])<span><a class="mark" href="#assert_assert_notdeepequal_actual_expected_message" id="assert_assert_notdeepequal_actual_expected_message">#</a></span></h2>
+<p>Tests for any deep inequality. Opposite of <code>assert.deepEqual</code>.</p>
+<h2 id="assert-strictequal-actual-expected-message-span-a-class-mark-href-assert_assert_strictequal_actual_expected_message-id-assert_assert_strictequal_actual_expected_message-a-span-">assert.strictEqual(actual, expected[, message])<span><a class="mark" href="#assert_assert_strictequal_actual_expected_message" id="assert_assert_strictequal_actual_expected_message">#</a></span></h2>
+<p>Tests strict equality as determined by the strict equality operator ( <code>===</code> ).</p>
+<h2 id="assert-notstrictequal-actual-expected-message-span-a-class-mark-href-assert_assert_notstrictequal_actual_expected_message-id-assert_assert_notstrictequal_actual_expected_message-a-span-">assert.notStrictEqual(actual, expected[, message])<span><a class="mark" href="#assert_assert_notstrictequal_actual_expected_message" id="assert_assert_notstrictequal_actual_expected_message">#</a></span></h2>
+<p>Tests strict inequality as determined by the strict not equal operator
+( <code>!==</code> ).</p>
+<h2 id="assert-deepstrictequal-actual-expected-message-span-a-class-mark-href-assert_assert_deepstrictequal_actual_expected_message-id-assert_assert_deepstrictequal_actual_expected_message-a-span-">assert.deepStrictEqual(actual, expected[, message])<span><a class="mark" href="#assert_assert_deepstrictequal_actual_expected_message" id="assert_assert_deepstrictequal_actual_expected_message">#</a></span></h2>
+<p>Tests for deep equality. Primitive values are compared with the strict equality
+operator ( <code>===</code> ).</p>
+<h2 id="assert-notdeepstrictequal-actual-expected-message-span-a-class-mark-href-assert_assert_notdeepstrictequal_actual_expected_message-id-assert_assert_notdeepstrictequal_actual_expected_message-a-span-">assert.notDeepStrictEqual(actual, expected[, message])<span><a class="mark" href="#assert_assert_notdeepstrictequal_actual_expected_message" id="assert_assert_notdeepstrictequal_actual_expected_message">#</a></span></h2>
+<p>Tests for deep inequality. Opposite of <code>assert.deepStrictEqual</code>.</p>
+<h2 id="assert-throws-block-error-message-span-a-class-mark-href-assert_assert_throws_block_error_message-id-assert_assert_throws_block_error_message-a-span-">assert.throws(block[, error][, message])<span><a class="mark" href="#assert_assert_throws_block_error_message" id="assert_assert_throws_block_error_message">#</a></span></h2>
+<p>Expects <code>block</code> to throw an error. <code>error</code> can be a constructor, <code>RegExp</code>, or
+validation function.</p>
+<p>Validate instanceof using constructor:</p>
+<pre><code>assert.throws(
+  function() {
+    throw new Error(&quot;Wrong value&quot;);
+  },
+  Error
+);
+</code></pre><p>Validate error message using RegExp:</p>
+<pre><code>assert.throws(
+  function() {
+    throw new Error(&quot;Wrong value&quot;);
+  },
+  /value/
+);
+</code></pre><p>Custom error validation:</p>
+<pre><code>assert.throws(
+  function() {
+    throw new Error(&quot;Wrong value&quot;);
+  },
+  function(err) {
+    if ( (err instanceof Error) &amp;&amp; /value/.test(err) ) {
+      return true;
+    }
+  },
+  &quot;unexpected error&quot;
+);
+</code></pre><h2 id="assert-doesnotthrow-block-error-message-span-a-class-mark-href-assert_assert_doesnotthrow_block_error_message-id-assert_assert_doesnotthrow_block_error_message-a-span-">assert.doesNotThrow(block[, error][, message])<span><a class="mark" href="#assert_assert_doesnotthrow_block_error_message" id="assert_assert_doesnotthrow_block_error_message">#</a></span></h2>
+<p>Expects <code>block</code> not to throw an error. See <a href="#assert_assert_throws_block_error_message">assert.throws()</a> for more details.</p>
+<p>If <code>block</code> throws an error and if it is of a different type from <code>error</code>, the
+thrown error will get propagated back to the caller. The following call will
+throw the <code>TypeError</code>, since we&#39;re not matching the error types in the
+assertion.</p>
+<pre><code>assert.doesNotThrow(
+  function() {
+    throw new TypeError(&quot;Wrong value&quot;);
+  },
+  SyntaxError
+);
+</code></pre><p>In case <code>error</code> matches with the error thrown by <code>block</code>, an <code>AssertionError</code>
+is thrown instead.</p>
+<pre><code>assert.doesNotThrow(
+  function() {
+    throw new TypeError(&quot;Wrong value&quot;);
+  },
+  TypeError
+);
+</code></pre><h2 id="assert-iferror-value-span-a-class-mark-href-assert_assert_iferror_value-id-assert_assert_iferror_value-a-span-">assert.ifError(value)<span><a class="mark" href="#assert_assert_iferror_value" id="assert_assert_iferror_value">#</a></span></h2>
+<p>Throws <code>value</code> if <code>value</code> is truthy. This is useful when testing the <code>error</code>
+argument in callbacks.</p>
+
+      </div>
+    </div>
+  </div>
+  <div id="footer">
+  </div>
+
+  <script src="assets/sh_main.js"></script>
+  <script src="assets/sh_javascript.min.js"></script>
+  <script>highlight(undefined, undefined, 'pre');</script>
+</body>
+</html>
+

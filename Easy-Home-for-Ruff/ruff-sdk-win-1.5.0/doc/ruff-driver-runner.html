@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Ruff Driver Runner Ruff 1.5.0 Manual &amp; Documentation</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic">
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="assets/sh.css">
+  <link rel="canonical" href="https://ruff.io/api/ruff-driver-runner.html">
+</head>
+<body class="alt apidoc" id="api-section-ruff-driver-runner">
+  <div id="content" class="clearfix">
+    <div id="column1" data-id="ruff-driver-runner" class="interior">
+      <header>
+        <h1>Ruff 1.5.0 Documentation</h1>
+        <hr>
+      </header>
+
+      <div id="toc">
+        <h2>Table of Contents</h2>
+        <ul>
+<li><a href="#ruff_driver_runner_ruff_driver_runner">Ruff Driver Runner</a><ul>
+<li><a href="#ruff_driver_runner_runner_run_driverpath_runcallback">runner.run(driverPath, runCallback)</a></li>
+</ul>
+</li>
+</ul>
+
+      </div>
+
+      <div id="apicontent">
+        <h1 id="ruff-driver-runner-span-a-class-mark-href-ruff_driver_runner_ruff_driver_runner-id-ruff_driver_runner_ruff_driver_runner-a-span-">Ruff Driver Runner<span><a class="mark" href="#ruff_driver_runner_ruff_driver_runner" id="ruff_driver_runner_ruff_driver_runner">#</a></span></h1>
+<p>The <code>ruff-app-runner</code> module provides you a facility for Ruff driver developers to run driver on their development machine. You may include this module with <code>require(&#39;ruff-driver-runner&#39;)</code>;</p>
+<pre><code class="lang-javascript">var assert = require(&#39;assert&#39;);
+
+var runner = require(&#39;ruff-driver-runner&#39;);
+var when = require(&#39;ruff-mock&#39;).when;
+
+export[&#39;test should work well&#39;] = function(done) {
+    runner.run(&#39;../&#39;, function(error, context) {
+        var inputs = context.inputs;
+        var device = context.device;
+
+        var gpio = inputs[&#39;gpio&#39;];
+
+        when(gpio)
+            .read(Function)
+            .then(function (callback) {
+                callback(undefined, 1);
+            });
+
+        gpio.read(function (error, value) {
+            assert.ifError(error);
+            assert.equal(value, 1);
+        });
+    }
+}
+
+require(&#39;test&#39;).run(exports);
+</code></pre>
+<p>Ruff driver runner creates a virtual runtime built with <code>ruff-mock</code>, which allows developers to:</p>
+<ul>
+<li>Retrive mock interface</li>
+</ul>
+<p>The second parameter of <code>run</code> function of driver runner is <code>context</code>. Where the interface could be retrived from</p>
+<pre><code class="lang-javascript">var gpio = context.inputs[&#39;gpio&#39;];
+</code></pre>
+<p>The name of the reference for <code>context.inputs</code> should be same with the name described in <code>driver.json</code>.</p>
+<p>Please checkout <a href="./ruff-mock.html">Ruff Mock</a> for more information.</p>
+<h2 id="runner-run-driverpath-runcallback-span-a-class-mark-href-ruff_driver_runner_runner_run_driverpath_runcallback-id-ruff_driver_runner_runner_run_driverpath_runcallback-a-span-">runner.run(driverPath, runCallback)<span><a class="mark" href="#ruff_driver_runner_runner_run_driverpath_runcallback" id="ruff_driver_runner_runner_run_driverpath_runcallback">#</a></span></h2>
+<div class="signature"><ul>
+<li><code>driverPath</code> refer to your driver path which contains <code>driver.json</code>.</li>
+<li><code>runCallback</code> will run once the virtual runtime has been created and your <code>attach</code> function has been invoked.</li>
+</div></ul>
+
+      </div>
+    </div>
+  </div>
+  <div id="footer">
+  </div>
+
+  <script src="assets/sh_main.js"></script>
+  <script src="assets/sh_javascript.min.js"></script>
+  <script>highlight(undefined, undefined, 'pre');</script>
+</body>
+</html>
+

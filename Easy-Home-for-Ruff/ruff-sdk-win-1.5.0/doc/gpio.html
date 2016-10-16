@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>GPIO Ruff 1.5.0 Manual &amp; Documentation</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic">
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="assets/sh.css">
+  <link rel="canonical" href="https://ruff.io/api/gpio.html">
+</head>
+<body class="alt apidoc" id="api-section-gpio">
+  <div id="content" class="clearfix">
+    <div id="column1" data-id="gpio" class="interior">
+      <header>
+        <h1>Ruff 1.5.0 Documentation</h1>
+        <hr>
+      </header>
+
+      <div id="toc">
+        <h2>Table of Contents</h2>
+        <ul>
+<li><a href="#gpio_gpio">GPIO</a><ul>
+<li><a href="#gpio_using_a_gpio_interface_in_driver">Using a GPIO Interface in Driver</a><ul>
+<li><a href="#gpio_configuring_driver_json">Configuring <code>driver.json</code></a><ul>
+<li><a href="#gpio_arguments">Arguments</a><ul>
+<li><a href="#gpio_direction"><code>direction</code></a></li>
+<li><a href="#gpio_edge"><code>edge</code></a></li>
+<li><a href="#gpio_level"><code>level</code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#gpio_writing_a_driver">Writing a Driver</a></li>
+</ul>
+</li>
+<li><a href="#gpio_api_references">API References</a><ul>
+<li><a href="#gpio_methods">Methods</a><ul>
+<li><a href="#gpio_read_callback"><code>read(callback)</code></a></li>
+<li><a href="#gpio_getdirection_callback"><code>getDirection(callback)</code></a></li>
+<li><a href="#gpio_getedge_callback"><code>getEdge(callback)</code></a></li>
+<li><a href="#gpio_write_value_callback"><code>write(value[, callback])</code></a></li>
+<li><a href="#gpio_setdirection_direction_level_callback"><code>setDirection(direction, level[, callback])</code></a></li>
+<li><a href="#gpio_setedge_edge_callback"><code>setEdge(edge[, callback])</code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+      </div>
+
+      <div id="apicontent">
+        <h1 id="gpio-span-a-class-mark-href-gpio_gpio-id-gpio_gpio-a-span-">GPIO<span><a class="mark" href="#gpio_gpio" id="gpio_gpio">#</a></span></h1>
+<p>General-purpose input/output (GPIO) is a generic pin on an integrated circuit whose behavior—including whether it is an input or output pin—is controllable by the user at run time.</p>
+<h2 id="using-a-gpio-interface-in-driver-span-a-class-mark-href-gpio_using_a_gpio_interface_in_driver-id-gpio_using_a_gpio_interface_in_driver-a-span-">Using a GPIO Interface in Driver<span><a class="mark" href="#gpio_using_a_gpio_interface_in_driver" id="gpio_using_a_gpio_interface_in_driver">#</a></span></h2>
+<h3 id="configuring-driver-json-span-a-class-mark-href-gpio_configuring_driver_json-id-gpio_configuring_driver_json-a-span-">Configuring <code>driver.json</code><span><a class="mark" href="#gpio_configuring_driver_json" id="gpio_configuring_driver_json">#</a></span></h3>
+<p>To use a GPIO interface in a driver, you need to have an input with type <code>&quot;gpio&quot;</code> in the <code>driver.json</code>:</p>
+<pre><code class="lang-json">{
+    &quot;models&quot;: [],
+    &quot;inputs&quot;: {
+        &quot;gpio-in&quot;: {
+            &quot;type&quot;: &quot;gpio&quot;,
+            &quot;args&quot;: {
+                &quot;direction&quot;: &quot;in&quot;,
+                &quot;edge&quot;: &quot;both&quot;
+            }
+        },
+        &quot;gpio-out&quot;: {
+            &quot;type&quot;: &quot;gpio&quot;,
+            &quot;args&quot;: {
+                &quot;direction&quot;: &quot;out&quot;,
+                &quot;level&quot;: &quot;low&quot;
+            }
+        }
+    }
+}
+</code></pre>
+<p>In the JSON configuration above, <code>&quot;gpio-in&quot;</code> and <code>&quot;gpio-out&quot;</code> are just names of the GPIO interfaces (you can change them to something else if you want to),
+which will be used as the key to get the interface instances in the driver.
+And the <code>&quot;type&quot;: &quot;gpio&quot;</code> informs Ruff framework to distribute an GPIO interface instead of others.</p>
+<h4 id="arguments-span-a-class-mark-href-gpio_arguments-id-gpio_arguments-a-span-">Arguments<span><a class="mark" href="#gpio_arguments" id="gpio_arguments">#</a></span></h4>
+<h5 id="-direction-span-a-class-mark-href-gpio_direction-id-gpio_direction-a-span-"><code>direction</code><span><a class="mark" href="#gpio_direction" id="gpio_direction">#</a></span></h5>
+<p>The direction of the interface, could either be <code>&quot;in&quot;</code> or <code>&quot;out&quot;</code>.</p>
+<h5 id="-edge-span-a-class-mark-href-gpio_edge-id-gpio_edge-a-span-"><code>edge</code><span><a class="mark" href="#gpio_edge" id="gpio_edge">#</a></span></h5>
+<p>The edge of the interface that controls interrupt events, could be one of <code>&quot;none&quot;</code>, <code>&quot;rising&quot;</code>, <code>&quot;falling&quot;</code> or <code>&quot;both&quot;</code>.
+This argument takes effect only if <code>direction</code> is set to <code>&quot;in&quot;</code>.</p>
+<p>An interrupt event will only be emitted if one of the conditions is matched:</p>
+<ul>
+<li>The electrical level rose from low to high and the edge is set to <code>&quot;rising&quot;</code> or <code>&quot;both&quot;</code>.</li>
+<li>The electrical level fell from high to low and the edge is set to <code>&quot;falling&quot;</code> or <code>&quot;both&quot;</code>.</li>
+</ul>
+<h5 id="-level-span-a-class-mark-href-gpio_level-id-gpio_level-a-span-"><code>level</code><span><a class="mark" href="#gpio_level" id="gpio_level">#</a></span></h5>
+<p>The initial electrical level of the interface, could be either <code>&quot;low&quot;</code> or <code>&quot;high&quot;</code>.
+This argument takes effect only if <code>direction</code> is set to <code>&quot;out&quot;</code>.</p>
+<h3 id="writing-a-driver-span-a-class-mark-href-gpio_writing_a_driver-id-gpio_writing_a_driver-a-span-">Writing a Driver<span><a class="mark" href="#gpio_writing_a_driver" id="gpio_writing_a_driver">#</a></span></h3>
+<pre><code class="lang-js">&#39;use strict&#39;;
+
+var driver = require(&#39;ruff-driver&#39;);
+var gpio = require(&#39;gpio&#39;);
+
+var Level = gpio.Level;
+var Direction = gpio.Direction;
+var Edge = gpio.Edge;
+
+module.exports = driver({
+    attach: function (inputs) {
+        this._gpioIn = inputs[&#39;gpio-in&#39;];
+        this._gpioOut = inputs[&#39;gpio-out&#39;];
+
+        this._gpioIn.on(&#39;interrupt&#39;, function (value) {
+            console.log(&#39;interrupt&#39;, value);
+        });
+    },
+    exports: {
+        turnOn: function (callback) {
+            this._gpioOut.write(Level.high, callback);
+        },
+        turnOff: function (callback) {
+            this._gpioOut.write(Level.low, callback);
+        }
+    }
+});
+</code></pre>
+<h2 id="api-references-span-a-class-mark-href-gpio_api_references-id-gpio_api_references-a-span-">API References<span><a class="mark" href="#gpio_api_references" id="gpio_api_references">#</a></span></h2>
+<h3 id="methods-span-a-class-mark-href-gpio_methods-id-gpio_methods-a-span-">Methods<span><a class="mark" href="#gpio_methods" id="gpio_methods">#</a></span></h3>
+<h4 id="-read-callback-span-a-class-mark-href-gpio_read_callback-id-gpio_read_callback-a-span-"><code>read(callback)</code><span><a class="mark" href="#gpio_read_callback" id="gpio_read_callback">#</a></span></h4>
+<p>Read from the interface, the value would be either <code>Level.low</code> (<code>0</code>) or <code>Level.high</code> (<code>1</code>).</p>
+<h4 id="-getdirection-callback-span-a-class-mark-href-gpio_getdirection_callback-id-gpio_getdirection_callback-a-span-"><code>getDirection(callback)</code><span><a class="mark" href="#gpio_getdirection_callback" id="gpio_getdirection_callback">#</a></span></h4>
+<p>Get direction of the interface, the value would be either <code>Direction.in</code> or <code>Direction.out</code>.</p>
+<h4 id="-getedge-callback-span-a-class-mark-href-gpio_getedge_callback-id-gpio_getedge_callback-a-span-"><code>getEdge(callback)</code><span><a class="mark" href="#gpio_getedge_callback" id="gpio_getedge_callback">#</a></span></h4>
+<p>Get edge of the interface, the value would be one of <code>Edge.none</code>, <code>Edge.rising</code>, <code>Edge.falling</code> or <code>Edge.both</code>.</p>
+<h4 id="-write-value-callback-span-a-class-mark-href-gpio_write_value_callback-id-gpio_write_value_callback-a-span-"><code>write(value[, callback])</code><span><a class="mark" href="#gpio_write_value_callback" id="gpio_write_value_callback">#</a></span></h4>
+<p>Write to the interface.</p>
+<ul>
+<li><strong>value:</strong> Could be one of the values under <code>Level</code> (<code>0</code> or <code>1</code>).</li>
+</ul>
+<h4 id="-setdirection-direction-level-callback-span-a-class-mark-href-gpio_setdirection_direction_level_callback-id-gpio_setdirection_direction_level_callback-a-span-"><code>setDirection(direction, level[, callback])</code><span><a class="mark" href="#gpio_setdirection_direction_level_callback" id="gpio_setdirection_direction_level_callback">#</a></span></h4>
+<p>Set direction of the interface.</p>
+<ul>
+<li><strong>direction:</strong> Could be one of the values under <code>Direction</code> or its keys.</li>
+<li><strong>level:</strong> Could be one of the values under <code>Level</code> (<code>0</code> or <code>1</code>) or its keys.</li>
+</ul>
+<h4 id="-setedge-edge-callback-span-a-class-mark-href-gpio_setedge_edge_callback-id-gpio_setedge_edge_callback-a-span-"><code>setEdge(edge[, callback])</code><span><a class="mark" href="#gpio_setedge_edge_callback" id="gpio_setedge_edge_callback">#</a></span></h4>
+<p>Set edge of the interface.</p>
+<ul>
+<li><strong>edge:</strong> Could be one of the values under <code>Edge</code> or its keys.</li>
+</ul>
+<p>Event: &#39;interrupt&#39;</p>
+<p>Emitted when the GPIO interface is triggered by a interrupt.</p>
+
+      </div>
+    </div>
+  </div>
+  <div id="footer">
+  </div>
+
+  <script src="assets/sh_main.js"></script>
+  <script src="assets/sh_javascript.min.js"></script>
+  <script>highlight(undefined, undefined, 'pre');</script>
+</body>
+</html>
+

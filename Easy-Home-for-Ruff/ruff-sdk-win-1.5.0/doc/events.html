@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Events Ruff 1.5.0 Manual &amp; Documentation</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic">
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="assets/sh.css">
+  <link rel="canonical" href="https://ruff.io/api/events.html">
+</head>
+<body class="alt apidoc" id="api-section-events">
+  <div id="content" class="clearfix">
+    <div id="column1" data-id="events" class="interior">
+      <header>
+        <h1>Ruff 1.5.0 Documentation</h1>
+        <hr>
+      </header>
+
+      <div id="toc">
+        <h2>Table of Contents</h2>
+        <ul>
+<li><a href="#events_events">Events</a><ul>
+<li><a href="#events_class_events_eventemitter">Class: events.EventEmitter</a><ul>
+<li><a href="#events_emitter_addlistener_event_listener">emitter.addListener(event, listener)</a></li>
+<li><a href="#events_emitter_on_event_listener">emitter.on(event, listener)</a></li>
+<li><a href="#events_emitter_once_event_listener">emitter.once(event, listener)</a></li>
+<li><a href="#events_emitter_removelistener_event_listener">emitter.removeListener(event, listener)</a></li>
+<li><a href="#events_emitter_removealllisteners_event">emitter.removeAllListeners([event])</a></li>
+<li><a href="#events_emitter_setmaxlisteners_n">emitter.setMaxListeners(n)</a></li>
+<li><a href="#events_emitter_getmaxlisteners">emitter.getMaxListeners()</a></li>
+<li><a href="#events_eventemitter_defaultmaxlisteners">EventEmitter.defaultMaxListeners</a></li>
+<li><a href="#events_emitter_listeners_event">emitter.listeners(event)</a></li>
+<li><a href="#events_emitter_emit_event_arg1_arg2">emitter.emit(event[, arg1][, arg2][, ...])</a></li>
+<li><a href="#events_emitter_listenercount_type">emitter.listenerCount(type)</a></li>
+<li><a href="#events_event_newlistener">Event: &#39;newListener&#39;</a></li>
+<li><a href="#events_event_removelistener">Event: &#39;removeListener&#39;</a></li>
+<li><a href="#events_inheriting_from_eventemitter">Inheriting from &#39;EventEmitter&#39;</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+      </div>
+
+      <div id="apicontent">
+        <h1 id="events-span-a-class-mark-href-events_events-id-events_events-a-span-">Events<span><a class="mark" href="#events_events" id="events_events">#</a></span></h1>
+<!--type=module-->
+<p>Many objects in Ruff emit events.
+All objects which emit events are instances of <code>events.EventEmitter</code>.
+You can access this module by doing: <code>require(&quot;events&quot;);</code></p>
+<p>Typically, event names are represented by a camel-cased string, however,
+there aren&#39;t any strict restrictions on that, as any string will be accepted.</p>
+<p>Functions can then be attached to objects, to be executed when an event
+is emitted. These functions are called <em>listeners</em>. Inside a listener
+function, <code>this</code> refers to the <code>EventEmitter</code> that the listener was
+attached to.</p>
+<h2 id="class-events-eventemitter-span-a-class-mark-href-events_class_events_eventemitter-id-events_class_events_eventemitter-a-span-">Class: events.EventEmitter<span><a class="mark" href="#events_class_events_eventemitter" id="events_class_events_eventemitter">#</a></span></h2>
+<p>Use <code>require(&#39;events&#39;)</code> to access the EventEmitter class.</p>
+<pre><code class="lang-javascript">var EventEmitter = require(&#39;events&#39;);
+</code></pre>
+<p>When an <code>EventEmitter</code> instance experiences an error, the typical action is
+to emit an <code>&#39;error&#39;</code> event.  Error events are treated as a special case in
+Ruff.  If there is no listener for it, then the default action is to print
+a stack trace and exit the program.</p>
+<p>All EventEmitters emit the event <code>&#39;newListener&#39;</code> when new listeners are
+added and <code>&#39;removeListener&#39;</code> when a listener is removed.</p>
+<h3 id="emitter-addlistener-event-listener-span-a-class-mark-href-events_emitter_addlistener_event_listener-id-events_emitter_addlistener_event_listener-a-span-">emitter.addListener(event, listener)<span><a class="mark" href="#events_emitter_addlistener_event_listener" id="events_emitter_addlistener_event_listener">#</a></span></h3>
+<h3 id="emitter-on-event-listener-span-a-class-mark-href-events_emitter_on_event_listener-id-events_emitter_on_event_listener-a-span-">emitter.on(event, listener)<span><a class="mark" href="#events_emitter_on_event_listener" id="events_emitter_on_event_listener">#</a></span></h3>
+<p>Adds a listener to the end of the listeners array for the specified <code>event</code>.
+No checks are made to see if the <code>listener</code> has already been added. Multiple
+calls passing the same combination of <code>event</code> and <code>listener</code> will result in the
+<code>listener</code> being added multiple times.</p>
+<pre><code>//TODO fs has not been achieved
+fs.readlink(&#39;path&#39;, function (stream) {
+  console.log(&#39;someone read!&#39;);
+});
+</code></pre><p>Returns emitter, so calls can be chained.</p>
+<h3 id="emitter-once-event-listener-span-a-class-mark-href-events_emitter_once_event_listener-id-events_emitter_once_event_listener-a-span-">emitter.once(event, listener)<span><a class="mark" href="#events_emitter_once_event_listener" id="events_emitter_once_event_listener">#</a></span></h3>
+<p>Adds a <strong>one time</strong> listener for the event. This listener is
+invoked only the next time the event is fired, after which
+it is removed.</p>
+<pre><code>//TODO fs has not been achieved
+fs.once(&#39;readlink&#39;, function (stream) {
+  console.log(&#39;Ah, we have our first user!&#39;);
+});
+</code></pre><p>Returns emitter, so calls can be chained.</p>
+<h3 id="emitter-removelistener-event-listener-span-a-class-mark-href-events_emitter_removelistener_event_listener-id-events_emitter_removelistener_event_listener-a-span-">emitter.removeListener(event, listener)<span><a class="mark" href="#events_emitter_removelistener_event_listener" id="events_emitter_removelistener_event_listener">#</a></span></h3>
+<p>Removes a listener from the listener array for the specified event.
+<strong>Caution</strong>: changes array indices in the listener array behind the listener.</p>
+<pre><code>var callback = function(stream) {
+  console.log(&#39;someone read!&#39;);
+};
+fs.on(&#39;readlink&#39;, callback);
+// ...
+fs.removeListener(&#39;readlink&#39;, callback);
+</code></pre><p><code>removeListener</code> will remove, at most, one instance of a listener from the
+listener array. If any single listener has been added multiple times to the
+listener array for the specified <code>event</code>, then <code>removeListener</code> must be called
+multiple times to remove each instance.</p>
+<p>Returns emitter, so calls can be chained.</p>
+<h3 id="emitter-removealllisteners-event-span-a-class-mark-href-events_emitter_removealllisteners_event-id-events_emitter_removealllisteners_event-a-span-">emitter.removeAllListeners([event])<span><a class="mark" href="#events_emitter_removealllisteners_event" id="events_emitter_removealllisteners_event">#</a></span></h3>
+<p>Removes all listeners, or those of the specified event. It&#39;s not a good idea to
+remove listeners that were added elsewhere in the code, especially when it&#39;s on
+an emitter that you didn&#39;t create (e.g. file streams).</p>
+<p>Returns emitter, so calls can be chained.</p>
+<h3 id="emitter-setmaxlisteners-n-span-a-class-mark-href-events_emitter_setmaxlisteners_n-id-events_emitter_setmaxlisteners_n-a-span-">emitter.setMaxListeners(n)<span><a class="mark" href="#events_emitter_setmaxlisteners_n" id="events_emitter_setmaxlisteners_n">#</a></span></h3>
+<p>By default EventEmitters will print a warning if more than 10 listeners are
+added for a particular event. This is a useful default which helps finding
+memory leaks. Obviously not all Emitters should be limited to 10. This function
+allows that to be increased. Set to <code>Infinity</code> (or <code>0</code>) for unlimited.</p>
+<p>Returns emitter, so calls can be chained.</p>
+<h3 id="emitter-getmaxlisteners-span-a-class-mark-href-events_emitter_getmaxlisteners-id-events_emitter_getmaxlisteners-a-span-">emitter.getMaxListeners()<span><a class="mark" href="#events_emitter_getmaxlisteners" id="events_emitter_getmaxlisteners">#</a></span></h3>
+<p>Returns the current max listener value for the emitter which is either set by
+<code>emitter.setMaxListeners(n)</code> or defaults to <code>EventEmitter.defaultMaxListeners</code>.</p>
+<p>This can be useful to increment/decrement max listeners to avoid the warning
+while not being irresponsible and setting a too big number.</p>
+<pre><code>emitter.setMaxListeners(emitter.getMaxListeners() + 1);
+emitter.once(&#39;event&#39;, function () {
+  // do stuff
+  emitter.setMaxListeners(Math.max(emitter.getMaxListeners() - 1, 0));
+});
+</code></pre><h3 id="eventemitter-defaultmaxlisteners-span-a-class-mark-href-events_eventemitter_defaultmaxlisteners-id-events_eventemitter_defaultmaxlisteners-a-span-">EventEmitter.defaultMaxListeners<span><a class="mark" href="#events_eventemitter_defaultmaxlisteners" id="events_eventemitter_defaultmaxlisteners">#</a></span></h3>
+<p><code>emitter.setMaxListeners(n)</code> sets the maximum on a per-instance basis.
+This class property lets you set it for <em>all</em> <code>EventEmitter</code> instances,
+current and future, effective immediately. Use with care.</p>
+<p>Note that <code>emitter.setMaxListeners(n)</code> still has precedence over
+<code>EventEmitter.defaultMaxListeners</code>.</p>
+<h3 id="emitter-listeners-event-span-a-class-mark-href-events_emitter_listeners_event-id-events_emitter_listeners_event-a-span-">emitter.listeners(event)<span><a class="mark" href="#events_emitter_listeners_event" id="events_emitter_listeners_event">#</a></span></h3>
+<p>Returns a copy of the array of listeners for the specified event.</p>
+<pre><code>//TODO
+fs.on(&#39;readlink&#39;, function (stream) {
+  console.log(&#39;someone read!&#39;);
+});
+console.log(util.inspect(fs.listeners(&#39;readlink&#39;))); // [ [Function] ]
+</code></pre><h3 id="emitter-emit-event-arg1-arg2-span-a-class-mark-href-events_emitter_emit_event_arg1_arg2-id-events_emitter_emit_event_arg1_arg2-a-span-">emitter.emit(event[, arg1][, arg2][, ...])<span><a class="mark" href="#events_emitter_emit_event_arg1_arg2" id="events_emitter_emit_event_arg1_arg2">#</a></span></h3>
+<p>Calls each of the listeners in order with the supplied arguments.</p>
+<p>Returns <code>true</code> if event had listeners, <code>false</code> otherwise.</p>
+<h3 id="emitter-listenercount-type-span-a-class-mark-href-events_emitter_listenercount_type-id-events_emitter_listenercount_type-a-span-">emitter.listenerCount(type)<span><a class="mark" href="#events_emitter_listenercount_type" id="events_emitter_listenercount_type">#</a></span></h3>
+<div class="signature"><ul>
+<li><code>type</code> <span class="type">Value</span> The type of event</li>
+</div></ul>
+<p>Returns the number of listeners listening to the <code>type</code> of event.</p>
+<h3 id="event-newlistener-span-a-class-mark-href-events_event_newlistener-id-events_event_newlistener-a-span-">Event: &#39;newListener&#39;<span><a class="mark" href="#events_event_newlistener" id="events_event_newlistener">#</a></span></h3>
+<div class="signature"><ul>
+<li><code>event</code> <span class="type">String</span> The event name</li>
+<li><code>listener</code> <span class="type">Function</span> The event handler function</li>
+</div></ul>
+<p>This event is emitted <em>before</em> a listener is added. When this event is
+triggered, the listener has not been added to the array of listeners for the
+<code>event</code>. Any listeners added to the event <code>name</code> in the newListener event
+callback will be added <em>before</em> the listener that is in the process of being
+added.</p>
+<h3 id="event-removelistener-span-a-class-mark-href-events_event_removelistener-id-events_event_removelistener-a-span-">Event: &#39;removeListener&#39;<span><a class="mark" href="#events_event_removelistener" id="events_event_removelistener">#</a></span></h3>
+<div class="signature"><ul>
+<li><code>event</code> <span class="type">String</span> The event name</li>
+<li><code>listener</code> <span class="type">Function</span> The event handler function</li>
+</div></ul>
+<p>This event is emitted <em>after</em> a listener is removed.  When this event is
+triggered, the listener has been removed from the array of listeners for the
+<code>event</code>.</p>
+<h3 id="inheriting-from-eventemitter-span-a-class-mark-href-events_inheriting_from_eventemitter-id-events_inheriting_from_eventemitter-a-span-">Inheriting from &#39;EventEmitter&#39;<span><a class="mark" href="#events_inheriting_from_eventemitter" id="events_inheriting_from_eventemitter">#</a></span></h3>
+<p>Inheriting from <code>EventEmitter</code> is no different from inheriting from any other
+constructor function. For example:</p>
+<pre><code>&#39;use strict&#39;;
+var util = require(&#39;util&#39;);
+var EventEmitter = require(&#39;events&#39;);
+
+function MyEventEmitter() {
+  // Initialize necessary properties from `EventEmitter` in this instance
+  EventEmitter.call(this);
+}
+
+// Inherit functions from `EventEmitter`&#39;s prototype
+util.inherits(MyEventEmitter, EventEmitter);
+</code></pre>
+      </div>
+    </div>
+  </div>
+  <div id="footer">
+  </div>
+
+  <script src="assets/sh_main.js"></script>
+  <script src="assets/sh_javascript.min.js"></script>
+  <script>highlight(undefined, undefined, 'pre');</script>
+</body>
+</html>
+

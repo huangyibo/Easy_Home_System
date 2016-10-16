@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>UART Ruff 1.5.0 Manual &amp; Documentation</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic">
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="assets/sh.css">
+  <link rel="canonical" href="https://ruff.io/api/uart.html">
+</head>
+<body class="alt apidoc" id="api-section-uart">
+  <div id="content" class="clearfix">
+    <div id="column1" data-id="uart" class="interior">
+      <header>
+        <h1>Ruff 1.5.0 Documentation</h1>
+        <hr>
+      </header>
+
+      <div id="toc">
+        <h2>Table of Contents</h2>
+        <ul>
+<li><a href="#uart_uart">UART</a><ul>
+<li><a href="#uart_using_a_uart_interface_in_driver">Using a UART Interface in Driver</a><ul>
+<li><a href="#uart_configuring_driver_json">Configuring <code>driver.json</code></a><ul>
+<li><a href="#uart_arguments">Arguments</a><ul>
+<li><a href="#uart_boudrate"><code>boudRate</code></a></li>
+<li><a href="#uart_stopbits"><code>stopBits</code></a></li>
+<li><a href="#uart_databits"><code>dataBits</code></a></li>
+<li><a href="#uart_parity"><code>parity</code></a></li>
+<li><a href="#uart_flowcontrol"><code>flowControl</code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#uart_writing_a_driver">Writing a Driver</a></li>
+<li><a href="#uart_api_references">API References</a><ul>
+<li><a href="#uart_methods">Methods</a><ul>
+<li><a href="#uart_read_callback"><code>read(callback)</code></a></li>
+<li><a href="#uart_write_data_callback"><code>write(data[, callback])</code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+      </div>
+
+      <div id="apicontent">
+        <h1 id="uart-span-a-class-mark-href-uart_uart-id-uart_uart-a-span-">UART<span><a class="mark" href="#uart_uart" id="uart_uart">#</a></span></h1>
+<p>A universal asynchronous receiver/transmitter, abbreviated UART /ˈjuːɑːrt/, is a computer hardware device that translates data between characters (usually bytes) in a computer and an asynchronous serial communication format that encapsulates those characters between start bits and stop bits.</p>
+<h2 id="using-a-uart-interface-in-driver-span-a-class-mark-href-uart_using_a_uart_interface_in_driver-id-uart_using_a_uart_interface_in_driver-a-span-">Using a UART Interface in Driver<span><a class="mark" href="#uart_using_a_uart_interface_in_driver" id="uart_using_a_uart_interface_in_driver">#</a></span></h2>
+<h3 id="configuring-driver-json-span-a-class-mark-href-uart_configuring_driver_json-id-uart_configuring_driver_json-a-span-">Configuring <code>driver.json</code><span><a class="mark" href="#uart_configuring_driver_json" id="uart_configuring_driver_json">#</a></span></h3>
+<p>To use a UART interface in a driver, you need to have an input with type <code>&quot;uart&quot;</code> in the <code>driver.json</code>:</p>
+<pre><code class="lang-json">{
+    &quot;models&quot;: [],
+    &quot;inputs&quot;: {
+        &quot;uart&quot;: {
+            &quot;type&quot;: &quot;uart&quot;,
+            &quot;args&quot;: {
+                &quot;baudRate&quot;: 57600,
+                &quot;stopBits&quot;: 1,
+                &quot;dataBits&quot;: 8,
+                &quot;parity&quot;: &quot;none&quot;,
+                &quot;flowControl&quot;: &quot;none&quot;
+            }
+        }
+    }
+}
+</code></pre>
+<p>In the JSON configuration above, the first <code>&quot;uart&quot;</code> is just the name of the UART interface (you can change it to something else if you want to),
+which will be used as the key to get the interface instance in the driver.
+And the <code>&quot;type&quot;: &quot;uart&quot;</code> informs Ruff framework to distribute an UART interface instead of others.</p>
+<h4 id="arguments-span-a-class-mark-href-uart_arguments-id-uart_arguments-a-span-">Arguments<span><a class="mark" href="#uart_arguments" id="uart_arguments">#</a></span></h4>
+<h5 id="-boudrate-span-a-class-mark-href-uart_boudrate-id-uart_boudrate-a-span-"><code>boudRate</code><span><a class="mark" href="#uart_boudrate" id="uart_boudrate">#</a></span></h5>
+<p>Baud rate, defaults to <code>57600</code>.</p>
+<h5 id="-stopbits-span-a-class-mark-href-uart_stopbits-id-uart_stopbits-a-span-"><code>stopBits</code><span><a class="mark" href="#uart_stopbits" id="uart_stopbits">#</a></span></h5>
+<p>Stop bits, defaults to <code>1</code>.</p>
+<h5 id="-databits-span-a-class-mark-href-uart_databits-id-uart_databits-a-span-"><code>dataBits</code><span><a class="mark" href="#uart_databits" id="uart_databits">#</a></span></h5>
+<p>Data bits, defaults to <code>8</code>.</p>
+<h5 id="-parity-span-a-class-mark-href-uart_parity-id-uart_parity-a-span-"><code>parity</code><span><a class="mark" href="#uart_parity" id="uart_parity">#</a></span></h5>
+<p>Parity, defaults to <code>&quot;none&quot;</code>, could be either of <code>&quot;none&quot;</code>, <code>&quot;odd&quot;</code> or <code>&quot;even&quot;</code>.</p>
+<h5 id="-flowcontrol-span-a-class-mark-href-uart_flowcontrol-id-uart_flowcontrol-a-span-"><code>flowControl</code><span><a class="mark" href="#uart_flowcontrol" id="uart_flowcontrol">#</a></span></h5>
+<p>Flow control, defaults to <code>&quot;none&quot;</code>, could be either of <code>&quot;none&quot;</code>, <code>&quot;hardware&quot;</code> or <code>&quot;software&quot;</code>.</p>
+<h2 id="writing-a-driver-span-a-class-mark-href-uart_writing_a_driver-id-uart_writing_a_driver-a-span-">Writing a Driver<span><a class="mark" href="#uart_writing_a_driver" id="uart_writing_a_driver">#</a></span></h2>
+<pre><code class="lang-js">&#39;use strict&#39;;
+
+var driver = require(&#39;ruff-driver&#39;);
+
+module.exports = driver({
+    attach: function (inputs) {
+        this._uart = inputs[&#39;uart&#39;];
+    },
+    exports: {
+        writeTwice: function (data, callback) {
+            this._uart.write(data);
+            this._uart.write(data, callback);
+        },
+        readText: function (callback) {
+            this._uart.read(function (error, data) {
+                if (error) {
+                    callback(error);
+                    return;
+                }
+
+                callback(undefined, data.toString());
+            });
+        }
+    }
+});
+</code></pre>
+<h2 id="api-references-span-a-class-mark-href-uart_api_references-id-uart_api_references-a-span-">API References<span><a class="mark" href="#uart_api_references" id="uart_api_references">#</a></span></h2>
+<h3 id="methods-span-a-class-mark-href-uart_methods-id-uart_methods-a-span-">Methods<span><a class="mark" href="#uart_methods" id="uart_methods">#</a></span></h3>
+<h4 id="-read-callback-span-a-class-mark-href-uart_read_callback-id-uart_read_callback-a-span-"><code>read(callback)</code><span><a class="mark" href="#uart_read_callback" id="uart_read_callback">#</a></span></h4>
+<p>Read incoming data (as <code>Buffer</code>) from the interface.</p>
+<h4 id="-write-data-callback-span-a-class-mark-href-uart_write_data_callback-id-uart_write_data_callback-a-span-"><code>write(data[, callback])</code><span><a class="mark" href="#uart_write_data_callback" id="uart_write_data_callback">#</a></span></h4>
+<p>Write data to the interface.</p>
+<ul>
+<li><strong>data:</strong> data to write, could be either a <code>Buffer</code> or a <code>string</code>.</li>
+</ul>
+
+      </div>
+    </div>
+  </div>
+  <div id="footer">
+  </div>
+
+  <script src="assets/sh_main.js"></script>
+  <script src="assets/sh_javascript.min.js"></script>
+  <script>highlight(undefined, undefined, 'pre');</script>
+</body>
+</html>
+

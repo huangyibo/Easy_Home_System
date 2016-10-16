@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Query String Ruff 1.5.0 Manual &amp; Documentation</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic">
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="assets/sh.css">
+  <link rel="canonical" href="https://ruff.io/api/querystring.html">
+</head>
+<body class="alt apidoc" id="api-section-querystring">
+  <div id="content" class="clearfix">
+    <div id="column1" data-id="querystring" class="interior">
+      <header>
+        <h1>Ruff 1.5.0 Documentation</h1>
+        <hr>
+      </header>
+
+      <div id="toc">
+        <h2>Table of Contents</h2>
+        <ul>
+<li><a href="#querystring_query_string">Query String</a><ul>
+<li><a href="#querystring_querystring_stringify_obj_sep_eq_options">querystring.stringify(obj[, sep][, eq][, options])</a></li>
+<li><a href="#querystring_querystring_parse_str_sep_eq_options">querystring.parse(str[, sep][, eq][, options])</a></li>
+<li><a href="#querystring_querystring_escape">querystring.escape</a></li>
+<li><a href="#querystring_querystring_unescape">querystring.unescape</a></li>
+</ul>
+</li>
+</ul>
+
+      </div>
+
+      <div id="apicontent">
+        <h1 id="query-string-span-a-class-mark-href-querystring_query_string-id-querystring_query_string-a-span-">Query String<span><a class="mark" href="#querystring_query_string" id="querystring_query_string">#</a></span></h1>
+<!--name=querystring-->
+<p>This module provides utilities for dealing with query strings.
+It provides the following methods:</p>
+<h2 id="querystring-stringify-obj-sep-eq-options-span-a-class-mark-href-querystring_querystring_stringify_obj_sep_eq_options-id-querystring_querystring_stringify_obj_sep_eq_options-a-span-">querystring.stringify(obj[, sep][, eq][, options])<span><a class="mark" href="#querystring_querystring_stringify_obj_sep_eq_options" id="querystring_querystring_stringify_obj_sep_eq_options">#</a></span></h2>
+<p>Serialize an object to a query string.
+Optionally override the default separator (<code>&#39;&amp;&#39;</code>) and assignment (<code>&#39;=&#39;</code>)
+characters.</p>
+<p>Options object may contain <code>encodeURIComponent</code> property (<code>querystring.escape</code> by default),
+it can be used to encode string with <code>non-utf8</code> encoding if necessary.</p>
+<p>Example:</p>
+<pre><code>querystring.stringify({ foo: &#39;bar&#39;, baz: [&#39;qux&#39;, &#39;quux&#39;], corge: &#39;&#39; })
+// returns
+&#39;foo=bar&amp;baz=qux&amp;baz=quux&amp;corge=&#39;
+
+querystring.stringify({foo: &#39;bar&#39;, baz: &#39;qux&#39;}, &#39;;&#39;, &#39;:&#39;)
+// returns
+&#39;foo:bar;baz:qux&#39;
+
+// Suppose gbkEncodeURIComponent function already exists,
+// it can encode string with `gbk` encoding
+querystring.stringify({ w: &#39;中文&#39;, foo: &#39;bar&#39; }, null, null,
+  { encodeURIComponent: gbkEncodeURIComponent })
+// returns
+&#39;w=%D6%D0%CE%C4&amp;foo=bar&#39;
+</code></pre><h2 id="querystring-parse-str-sep-eq-options-span-a-class-mark-href-querystring_querystring_parse_str_sep_eq_options-id-querystring_querystring_parse_str_sep_eq_options-a-span-">querystring.parse(str[, sep][, eq][, options])<span><a class="mark" href="#querystring_querystring_parse_str_sep_eq_options" id="querystring_querystring_parse_str_sep_eq_options">#</a></span></h2>
+<p>Deserialize a query string to an object.
+Optionally override the default separator (<code>&#39;&amp;&#39;</code>) and assignment (<code>&#39;=&#39;</code>)
+characters.</p>
+<p>Options object may contain <code>maxKeys</code> property (equal to 1000 by default), it&#39;ll
+be used to limit processed keys. Set it to 0 to remove key count limitation.</p>
+<p>Options object may contain <code>decodeURIComponent</code> property (<code>querystring.unescape</code> by default),
+it can be used to decode a <code>non-utf8</code> encoding string if necessary.</p>
+<p>Example:</p>
+<pre><code>querystring.parse(&#39;foo=bar&amp;baz=qux&amp;baz=quux&amp;corge&#39;)
+// returns
+{ foo: &#39;bar&#39;, baz: [&#39;qux&#39;, &#39;quux&#39;], corge: &#39;&#39; }
+
+// Suppose gbkDecodeURIComponent function already exists,
+// it can decode `gbk` encoding string
+querystring.parse(&#39;w=%D6%D0%CE%C4&amp;foo=bar&#39;, null, null,
+  { decodeURIComponent: gbkDecodeURIComponent })
+// returns
+{ w: &#39;中文&#39;, foo: &#39;bar&#39; }
+</code></pre><h2 id="querystring-escape-span-a-class-mark-href-querystring_querystring_escape-id-querystring_querystring_escape-a-span-">querystring.escape<span><a class="mark" href="#querystring_querystring_escape" id="querystring_querystring_escape">#</a></span></h2>
+<p>The escape function used by <code>querystring.stringify</code>,
+provided so that it could be overridden if necessary.</p>
+<h2 id="querystring-unescape-span-a-class-mark-href-querystring_querystring_unescape-id-querystring_querystring_unescape-a-span-">querystring.unescape<span><a class="mark" href="#querystring_querystring_unescape" id="querystring_querystring_unescape">#</a></span></h2>
+<p>The unescape function used by <code>querystring.parse</code>,
+provided so that it could be overridden if necessary.</p>
+<p>It will try to use <code>decodeURIComponent</code> in the first place,
+but if that fails it falls back to a safer equivalent that
+doesn&#39;t throw on malformed URLs.</p>
+
+      </div>
+    </div>
+  </div>
+  <div id="footer">
+  </div>
+
+  <script src="assets/sh_main.js"></script>
+  <script src="assets/sh_javascript.min.js"></script>
+  <script>highlight(undefined, undefined, 'pre');</script>
+</body>
+</html>
+

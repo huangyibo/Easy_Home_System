@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Ruff Application Runner Ruff 1.5.0 Manual &amp; Documentation</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic">
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="assets/sh.css">
+  <link rel="canonical" href="https://ruff.io/api/ruff-app-runner.html">
+</head>
+<body class="alt apidoc" id="api-section-ruff-app-runner">
+  <div id="content" class="clearfix">
+    <div id="column1" data-id="ruff-app-runner" class="interior">
+      <header>
+        <h1>Ruff 1.5.0 Documentation</h1>
+        <hr>
+      </header>
+
+      <div id="toc">
+        <h2>Table of Contents</h2>
+        <ul>
+<li><a href="#ruff_app_runner_ruff_application_runner">Ruff Application Runner</a><ul>
+<li><a href="#ruff_app_runner_runner_run_apppath_runcallback_end_endcallback">runner.run(appPath, runCallback).end(endCallback)</a></li>
+</ul>
+</li>
+</ul>
+
+      </div>
+
+      <div id="apicontent">
+        <h1 id="ruff-application-runner-span-a-class-mark-href-ruff_app_runner_ruff_application_runner-id-ruff_app_runner_ruff_application_runner-a-span-">Ruff Application Runner<span><a class="mark" href="#ruff_app_runner_ruff_application_runner" id="ruff_app_runner_ruff_application_runner">#</a></span></h1>
+<p>The <code>ruff-app-runner</code> module provides you a facility for Ruff application developers to run application on their development machines. You may include this module with <code>require(&#39;ruff-app-runner&#39;)</code>;</p>
+<pre><code class="lang-javascript">var runner = require(&#39;ruff-app-runner&#39;);
+var verify = require(&#39;ruff-mock&#39;).verify;
+
+exports[&#39;test should call turn on while application is ready&#39;] = function() {
+    runner.run(appPath, function() {
+        verify($(&#39;led-0&#39;)).turnOn();
+    });
+};
+
+require(&#39;test&#39;).run(exports);
+</code></pre>
+<p>Ruff app runner creates a virtual runtime built with <code>ruff-mock</code>, which allows applicaiton developers to:</p>
+<ul>
+<li>Mock device data</li>
+</ul>
+<p>Mock device can set its function&#39;s return value, e.g:</p>
+<pre><code class="lang-javascript">when($(&#39;temperature&#39;)).getTemperature().thenReturn(24);
+</code></pre>
+<ul>
+<li>Verify device behavior</li>
+</ul>
+<p>Upon code execution, invocation behavior can be verified by <code>verify</code>.</p>
+<pre><code class="lang-javascript">verify($(&#39;led&#39;)).turnOn();
+</code></pre>
+<ul>
+<li>Trigger device event</li>
+</ul>
+<p>Every mock device supports EventEmitter. Their events can be triggered by <code>emit</code>.</p>
+<pre><code class="lang-javascript">$(&#39;ir&#39;).emit(&#39;away&#39;);
+</code></pre>
+<p>For more mock details, you can refer to <code>ruff-mock</code> module document.</p>
+<h2 id="runner-run-apppath-runcallback-end-endcallback-span-a-class-mark-href-ruff_app_runner_runner_run_apppath_runcallback_end_endcallback-id-ruff_app_runner_runner_run_apppath_runcallback_end_endcallback-a-span-">runner.run(appPath, runCallback).end(endCallback)<span><a class="mark" href="#ruff_app_runner_runner_run_apppath_runcallback_end_endcallback" id="ruff_app_runner_runner_run_apppath_runcallback_end_endcallback">#</a></span></h2>
+<div class="signature"><ul>
+<li><code>appPath</code> refer to your applicaiton path that contains <code>app.json</code>.</li>
+<li><code>runCallback</code> will run once the virtual runtime has been created and your <code>ready</code> function has been invoked.</li>
+<li><code>endCallback</code> will run once your <code>end</code> function has been invoked.</li>
+</div></ul>
+<p>You can ignore the <code>end</code> part if you don&#39;t need it.</p>
+
+      </div>
+    </div>
+  </div>
+  <div id="footer">
+  </div>
+
+  <script src="assets/sh_main.js"></script>
+  <script src="assets/sh_javascript.min.js"></script>
+  <script>highlight(undefined, undefined, 'pre');</script>
+</body>
+</html>
+
