@@ -1,0 +1,48 @@
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre, 
+form,fieldset,input,textarea,p,blockquote,th,td { 
+    padding: 0; 
+    margin: 0; 
+    border: 0; 
+    outline:0;
+    font-weight: normal; 
+    font-style: normal; 
+    font-size: 100%; 
+    font-family: inherit; /*继承父元素的字体系列样式*/
+    vertical-align: baseline;/*vertical-align 属性设置元素的垂直对齐方式*/
+} 
+table { 
+    border-collapse: collapse; 
+    border-spacing: 0; 
+} 
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre, 
+form,fieldset,input,textarea,p,blockquote,th,td { 
+    padding: 0; 
+    margin: 0; 
+} 
+table { 
+    border-collapse: collapse;/*为表格合并边框*/ 
+    border-spacing: 0; /*设置相邻单元格的边框间的距离*/
+} 
+fieldset,img { 
+    border: 0; 
+} 
+address,caption,cite,code,dfn,em,strong,th,var { 
+    font-weight: normal; 
+    font-style: normal; 
+} 
+ol,ul { 
+    list-style: none; 
+} 
+caption,th { 
+    text-align: left; 
+} 
+h1,h2,h3,h4,h5,h6 { 
+    font-weight: normal; 
+    font-size: 100%;
+} 
+blockquote:before, blockquote:after,q:before,q:after { 
+    content:”; /*就是引用，在<q></q>标签之间的文字两头加上引号(")*/
+} 
+abbr,acronym { 
+    border: 0; 
+}

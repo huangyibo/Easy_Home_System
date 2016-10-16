@@ -1,0 +1,131 @@
+<!DOCTYPE>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+	<title>网页展示</title>
+	<link rel="stylesheet" type="text/css" href="css/rest.css" />
+	<link rel="stylesheet" type="text/css" href="css/main.css" />
+	<script src="http://127.0.0.1:3000/assets/img/jquery-1.8.2.min.js" type="text/javascript"></script>
+</head>
+<body>
+	<div id="title">
+		<p>页面展示</p>
+	</div>
+	<div id="index1">
+		<div class="whole"><img src="http://127.0.0.1:3000/assets/img/01.jpg"/></div>
+		<div id="add"><img src="http://127.0.0.1:3000/assets/img/01_1.jpg"/></div>
+		<div id="front"><img src="http://127.0.0.1:3000/assets/img/01_2.png"/></div>
+	</div>
+	<div id="index2">
+		<div class="whole" id="whole2"><img src="http://127.0.0.1:3000/assets/img/02/02-1.JPG"/></div>
+	</div>
+	<div id="index3">
+		<div class="whole" id="whole3"><img src="http://127.0.0.1:3000/assets/img/03.jpg"/></div>
+	</div>
+	<div id="index4">
+		<div class="whole" id="whole4"><img src="http://127.0.0.1:3000/assets/img/04/04_1.JPG"/></div>
+	</div>
+</body>
+<script>
+		function close1() {
+			$('#add').animate({left:"40%"},"500000"); // to close
+		}
+		function open1() {
+			$('#add').animate({left:"46.5%"},"500000");
+		}
+		function open3 () {
+			$('#whole3').children().attr("src","http://127.0.0.1:3000/assets/img/03_1.jpg"); // to open
+		}
+		function close3 () {
+			$('#whole3').children().attr("src","http://127.0.0.1:3000/assets/img/03.jpg");
+		}
+
+		function open4 () {
+			$('#whole4').children().attr("src","http://127.0.0.1:3000/assets/img/04/04_1.JPG"); // to close
+		}
+		function close4 () {
+			$('#whole4').children().attr("src","http://127.0.0.1:3000/assets/img/04/04_2.JPG");
+		}
+
+		var b=1,c=-1;
+		var flag=true;
+		function open2 () {
+			while(b<=6) {
+				window.setTimout(function() {
+				    $('#whole2').children().attr("src","http://127.0.0.1:3000/assets/img/02/02-"+b+".JPG");
+				    // b++;
+				}, 100);
+				b++;
+			}
+			b--;
+		}
+		function close2 () {
+			while(b>=1) {
+				window.setTimout(function() {
+				    $('#whole2').children().attr("src","http://127.0.0.1:3000/assets/img/02/02-"+b+".JPG");
+				    // b--;
+				}, 100);
+				b--;
+			}
+			b++;
+		}
+
+var timestamp = 0;
+var FETCHING_INTERVAL = 3000;
+
+
+var msg = "";
+var topic = "";
+
+fetchData();
+
+function fetchData() {
+    return fetch('/control')
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (result) {
+            
+            msg = result.msg;
+            topic = result.topic;
+
+            if ( topic == "light" ) {
+            	if (msg == "1") {
+            		open4();
+            	} 
+            	if (msg == "0") {
+            		close4();
+            	}
+            }
+            if ( topic == "air_condition" ) {
+            	if (msg == "1") {
+            		open3();
+            	}
+            	if (msg == "0") {
+            		close3();
+            	}
+            }
+            if ( topic == "tv" ) {
+							if (msg == "1") {
+            		open2();
+            	} 
+            	if (msg == "0") {
+            		close2();
+            	}
+            }
+            if ( topic == "window" ) {
+            	if (msg == "1") {
+            		open1();
+            	} 
+            	if (msg == "0") {
+            		close1();
+            	}
+            }
+
+            setTimeout(fetchData, FETCHING_INTERVAL);
+        }, function () {
+            setTimeout(fetchData, FETCHING_INTERVAL);
+        });
+}
+</script>
+</html>

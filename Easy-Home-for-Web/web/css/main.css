@@ -1,0 +1,8 @@
+*{margin: 0px;padding: 0px;}
+body{background-color: #9bb9b2;}
+p{font-family: "微软雅黑";font-size: 50px;text-align: center;padding-top: 20px;letter-spacing:20px;color: #093329;}
+#title{background-color: #9da4a4;width: 70%;height: 120px;margin: 0 auto;border-bottom:solid #717474;}
+.whole{text-align: center;width: 100%;}
+.whole img{width: 70%;}
+#add{z-index: 0;position: absolute;top:35%;left:46.5%;}
+#front{z-index: 10;position: absolute;top:35%;left:46.5%;width: 80px;}
